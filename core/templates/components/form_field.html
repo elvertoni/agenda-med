@@ -1,0 +1,14 @@
+{% comment %}
+Render a single bound form field with label and inline errors.
+
+Args:
+  field: a bound form field (e.g. form.full_name).
+{% endcomment %}
+<div class='space-y-1.5'>
+  <label for='{{ field.id_for_label }}' class='block text-sm font-medium text-slate-300'>
+    {{ field.label }}{% if field.field.required %} <span class='text-rose-400'>*</span>{% endif %}
+  </label>
+  {{ field }}
+  {% if field.help_text %}<p class='text-sm text-slate-400'>{{ field.help_text }}</p>{% endif %}
+  {% for error in field.errors %}<p class='text-sm text-rose-400'>{{ error }}</p>{% endfor %}
+</div>

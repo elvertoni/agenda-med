@@ -1,0 +1,31 @@
+[project]
+name = 'agenda-clinica'
+version = '0.1.0'
+description = 'Sistema de agendamento para clínica médica'
+requires-python = '>=3.12'
+dependencies = [
+    'Django>=5.0,<6',
+]
+
+[project.optional-dependencies]
+dev = [
+    'ruff>=0.6',
+]
+
+[tool.ruff]
+line-length = 100
+target-version = 'py312'
+extend-exclude = ['.venv', 'migrations']
+
+[tool.ruff.lint]
+select = ['E', 'F', 'W', 'I', 'Q']
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = 'single'
+multiline-quotes = 'single'
+docstring-quotes = 'single'
+avoid-escape = true
+
+[tool.ruff.format]
+quote-style = 'single'
+indent-style = 'space'

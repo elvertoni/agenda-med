@@ -1,0 +1,22 @@
+{% comment %}
+Banner de feedback. Cor da barra lateral varia conforme o nível.
+
+Args:
+  level: 'success' | 'error' | 'info' (default: 'info')
+  text:  texto da mensagem
+{% endcomment %}
+{% with level=level|default:'info' %}
+  {% if level == 'success' %}
+    <div class='rounded-xl border border-slate-800 border-l-4 border-l-emerald-500 bg-slate-900 px-4 py-3 text-sm text-slate-200'>
+      {{ text }}
+    </div>
+  {% elif level == 'error' %}
+    <div class='rounded-xl border border-slate-800 border-l-4 border-l-rose-500 bg-slate-900 px-4 py-3 text-sm text-slate-200'>
+      {{ text }}
+    </div>
+  {% else %}
+    <div class='rounded-xl border border-slate-800 border-l-4 border-l-sky-500 bg-slate-900 px-4 py-3 text-sm text-slate-200'>
+      {{ text }}
+    </div>
+  {% endif %}
+{% endwith %}

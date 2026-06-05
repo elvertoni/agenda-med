@@ -1,0 +1,79 @@
+Utilize todas as técnicas atuais de prompt engineering para melhorar o prompt
+abaixo afim de extrair os melhores resultados possíveis de um agente de IA
+para programação. Use marcações com tags xml, e seja mandatório com a IA:
+
+Estou desenvolvendo um novo projeto com Python e Django, que será um sistema web de agendamento para clínica médica que possui vários profissionais atendendo, quero um sistema que atenda pelo whatsapp com um chatbot capaz de consultar uma base de dados e agendas dos profissionais.
+O cliente pode mandar uma mensagem, o chatbot interagem e responde as perguntas do cliente, pode passar informações sobre preço, protocolos de atendimento, protocolos de exames médicos, como jejum, o abstinência de determinados medicamentos ou alimentos mas tudo isso sera passado depois pela equipe da clinica.
+
+Deve usar Django full stack, com frontend no próprio Django Template Language,
+usando tailwindcss.
+O design deve ser moderno e responsivo, com gradient de cores e paletas
+harmônicas e fundo escuro.
+Crie um padrão visual para o sistema todo. Todas as telas devem ter o mesmo
+design e os mesmos componentes, seguindo uma identididade visual e um design
+system.
+O sistema de autenticação será o sistema nativo de usuários e autenticação
+do Django.
+O login de usuários deve ser feito através do email ao invés do username.
+As entidades/domains do sistema devem ser separadas em apps do Django,
+para isolar as responsabilidades.
+O código deve ser simples, sempre usar aspas simples e seguir os padrões
+da PEP08.
+O código do projeto deve ser em inglês.
+O código deve usar aspas simples sempre que possível.
+Toda a informação mostrada na interface do usuário deve ser em português
+brasileiro.
+Usar apenas banco de dados sqlite padrão do Django.
+Toda tabela/model deve ter os campos created_at e updated_at.
+Não implementar docker inicialmente (colocar para sprints finais).
+Não implementar testes inicialmente (colocar para sprints finais).
+Sempre que possível, o projeto deve usar Class Based Views, classes, funções
+e recursos nativos do Django.
+Caso use signals no projeto, eles devem ficar em um arquivo signals.py dentro
+da app correspondente do signal.
+O sistema deve ter um site principal de apresentação que será público e terá
+as opções de cadastre-se e login.
+Após logar, o usuário é direcionado para o dashboard principal do sistema.
+Não adicione nada além do que eu solicitar, o projeto deve ser simples e enxuto.
+
+1 - o atendimento será primordialmente pelo whatsapp mas também o cliente pode entrar no site e verificar a disponibilidade da agenda e dos profissionais, bem como a consulta que marcou com confirmação através de um código enviado para o próprio whats da pessoa, exemplo, eu quero entrar no site, digito o meu whats que cadastrei a consulta e é enviado um código para o meu numero, com esse numero termino de acessar a plataforma.
+
+2 - no cadastro da consulta devera ser solicitado e registrado as seguintes informações:
+Nome completo, idade, sexo, endereço, numero celular, e-mail, plano de saúde e o que vc souber que é importante para agendamentos médicos.
+
+3 - quero a capacidade de confirmação de presença com 24 horas de antecedência com confirmação do paciente pelo whatsapp e/ou e-mail.
+
+Gere para mim o PRD desse projeto (Product Requirement Document), em formato
+de arquivo markdown, com a seguinte estrutura enumerada:
+- Visão geral
+- Sobre o produto
+- Propósito
+- Público alvo
+- Objetivos
+- Requisitos funcionais
+    - Flowchart mermaid com os fluxos de UX
+- Requisitos não-funcionais
+- Arquitetura técnica
+    - Stack
+    - Estrutura de dados com schemas em formato mermaid
+- Design system
+    - cores primárias, de fundo, padrão de botões, inputs, forms, grids,
+    menus, fontes. Tudo feito com TailwindCSS dentro do Django Template Language
+- User stories
+    - Épico
+    - Critérios de aceite
+- Métricas de sucesso
+    - KPIs de produto, usuário e etc
+- Risco e mitigações
+- Lista de tarefas
+    - Em sprints
+    - Tarefas e subtarefas enumeradas e com descrições e detalhamento de escopo
+    e implementação
+    - Em formato de checklist com espaço para marcar com "X" conforme o
+    andamento e conclusão de cada subtarefa e tarefa
+    - Quebre as tarefas e subtarefas em pequenas implementações, bem específicas
+    e detalhadas, resultando em maior quantidade de tarefas e subtarefas, mas
+    com um nível maior de granularidade
+
+
+

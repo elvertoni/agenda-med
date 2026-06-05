@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Agenda Clínica — Atendimento pelo WhatsApp{% endblock %}
+
+{% block content %}
+  <section class='overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 via-teal-500 to-sky-600 p-8 shadow-xl shadow-emerald-900/30 sm:p-12'>
+    <div class='max-w-3xl'>
+      <p class='text-xs uppercase tracking-wide text-slate-950'>Agenda Clínica</p>
+      <h1 class='mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl md:text-5xl'>
+        Atendimento integrado para consultas, exames e orientação ao paciente
+      </h1>
+      <p class='mt-4 text-base leading-relaxed text-slate-900/80 sm:text-lg'>
+        Encontre profissionais ativos, valores de atendimento e protocolos públicos da clínica em uma experiência simples, responsiva e preparada para o atendimento pelo WhatsApp.
+      </p>
+      <div class='mt-8 flex flex-wrap items-center gap-3'>
+        <a href='{% url "accounts:login" %}'
+           class='inline-flex items-center justify-center rounded-xl bg-slate-950 px-5 py-3 text-sm font-medium text-emerald-400 shadow-lg shadow-black/20 transition hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 focus:ring-offset-emerald-500'>
+          Cadastre-se
+        </a>
+        <a href='{% url "accounts:login" %}'
+           class='inline-flex items-center justify-center rounded-xl border border-slate-950/30 bg-white/10 px-5 py-3 text-sm font-medium text-slate-950 backdrop-blur transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 focus:ring-offset-emerald-500'>
+          Login
+        </a>
+      </div>
+    </div>
+
+    <div class='mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+      <div class='rounded-2xl border border-slate-950/30 bg-white/10 p-6 backdrop-blur'>
+        <p class='text-2xl font-semibold text-slate-950'>{{ professional_count }}</p>
+        <p class='mt-1 text-sm text-slate-900/80'>profissionais ativos</p>
+      </div>
+      <div class='rounded-2xl border border-slate-950/30 bg-white/10 p-6 backdrop-blur'>
+        <p class='text-2xl font-semibold text-slate-950'>{{ price_count }}</p>
+        <p class='mt-1 text-sm text-slate-900/80'>preços publicados</p>
+      </div>
+      <div class='rounded-2xl border border-slate-950/30 bg-white/10 p-6 backdrop-blur'>
+        <p class='text-2xl font-semibold text-slate-950'>{{ service_protocol_count|add:exam_protocol_count }}</p>
+        <p class='mt-1 text-sm text-slate-900/80'>protocolos disponíveis</p>
+      </div>
+    </div>
+  </section>
+
+  <section class='mt-10'>
+    <div class='flex flex-wrap items-center justify-between gap-3'>
+      <div>
+        <h2 class='text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl'>Profissionais em atendimento</h2>
+        <p class='mt-2 text-sm text-slate-400'>Conheça a equipe ativa e suas especialidades.</p>
+      </div>
+      <a href='{% url "public_professionals" %}'
+         class='inline-flex items-center justify-center rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400'>
+        Ver equipe
+      </a>
+    </div>
+
+    <div class='mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+      {% for professional in featured_professionals %}
+        <article class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur'>
+          <p class='text-xs uppercase tracking-wide text-slate-500'>{{ professional.specialty.name }}</p>
+          <h3 class='mt-1 text-lg font-semibold text-slate-100'>{{ professional.full_name }}</h3>
+          <p class='mt-2 text-sm text-slate-400'>Registro {{ professional.registration_number }}</p>
+          {% if professional.bio %}
+            <p class='mt-4 text-sm leading-relaxed text-slate-300'>{{ professional.bio|truncatechars:140 }}</p>
+          {% endif %}
+        </article>
+      {% empty %}
+        <div class='col-span-full rounded-2xl border border-slate-800 bg-slate-900/60 p-6 text-center text-sm text-slate-400'>
+          Em breve a equipe ativa aparecerá aqui.
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class='mt-10'>
+    <h2 class='text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl'>Informações públicas</h2>
+    <p class='mt-2 text-sm text-slate-400'>Preços, orientações de atendimento e preparo para exames publicados pela clínica.</p>
+
+    <div class='mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+      <a href='{% url "clinic_content_public:public_prices" %}'
+         class='group rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur transition hover:border-emerald-500/60 hover:bg-slate-900'>
+        <p class='text-xs uppercase tracking-wide text-slate-500'>Transparência</p>
+        <h3 class='mt-1 text-lg font-semibold text-slate-100 group-hover:text-emerald-400'>Preços e procedimentos</h3>
+        {% for item in featured_prices %}
+          {% if forloop.first %}
+            <p class='mt-2 text-sm text-slate-400'>{{ item.name }} · R$ {{ item.price }}</p>
+          {% endif %}
+        {% empty %}
+          <p class='mt-2 text-sm text-slate-400'>Valores serão publicados pela equipe da clínica.</p>
+        {% endfor %}
+      </a>
+
+      <a href='{% url "clinic_content_public:public_service_protocols" %}'
+         class='group rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur transition hover:border-emerald-500/60 hover:bg-slate-900'>
+        <p class='text-xs uppercase tracking-wide text-slate-500'>Atendimento</p>
+        <h3 class='mt-1 text-lg font-semibold text-slate-100 group-hover:text-emerald-400'>Protocolos de atendimento</h3>
+        {% for protocol in featured_service_protocols %}
+          {% if forloop.first %}
+            <p class='mt-2 text-sm text-slate-400'>{{ protocol.title }}</p>
+          {% endif %}
+        {% empty %}
+          <p class='mt-2 text-sm text-slate-400'>Orientações gerais serão exibidas quando publicadas.</p>
+        {% endfor %}
+      </a>
+
+      <a href='{% url "clinic_content_public:public_exam_protocols" %}'
+         class='group rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur transition hover:border-emerald-500/60 hover:bg-slate-900'>
+        <p class='text-xs uppercase tracking-wide text-slate-500'>Preparo</p>
+        <h3 class='mt-1 text-lg font-semibold text-slate-100 group-hover:text-emerald-400'>Protocolos de exames</h3>
+        {% for protocol in featured_exam_protocols %}
+          {% if forloop.first %}
+            <p class='mt-2 text-sm text-slate-400'>{{ protocol.exam_name }}</p>
+          {% endif %}
+        {% empty %}
+          <p class='mt-2 text-sm text-slate-400'>Instruções de preparo serão exibidas quando publicadas.</p>
+        {% endfor %}
+      </a>
+    </div>
+  </section>
+{% endblock %}

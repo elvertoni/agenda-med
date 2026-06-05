@@ -1,0 +1,26 @@
+.venv/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+db.sqlite3
+db.sqlite3-journal
+cookies.txt
+.env
+.env.*
+
+# Tailwind
+node_modules/
+tailwindcss
+tailwindcss.exe
+
+# Static build output
+static/css/output.css
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block nav %}
+  <nav class='sticky top-0 z-40 border-b border-slate-800 bg-slate-950/80 backdrop-blur'>
+    <div class='mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8'>
+      <a href='{% url "dashboard" %}'
+         class='bg-gradient-to-r from-emerald-400 to-sky-400 bg-clip-text text-lg font-semibold text-transparent focus:outline-none focus:ring-2 focus:ring-sky-400'>
+        Agenda Clínica
+      </a>
+      <div class='flex items-center gap-4 text-sm text-slate-300'>
+        <span class='hidden sm:inline text-slate-400'>Painel da equipe · {{ user.email }}</span>
+        <form method='post' action='{% url "accounts:logout" %}'>
+          {% csrf_token %}
+          <button type='submit'
+                  class='inline-flex items-center justify-center rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400'>
+            Sair
+          </button>
+        </form>
+      </div>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+  {% with current=request.resolver_match.url_name %}
+  <div class='grid grid-cols-1 lg:grid-cols-[16rem_1fr] gap-6'>
+    <aside class='rounded-2xl border border-slate-800 bg-slate-900/60 p-4 shadow-xl shadow-black/20 backdrop-blur sm:p-6'>
+      <div class='border-b border-slate-800 px-3 py-3'>
+        <p class='text-xs font-medium uppercase tracking-wider text-slate-400'>Administração</p>
+        <p class='mt-1 text-sm text-slate-300'>Operação da clínica</p>
+      </div>
+
+      <nav class='mt-4 flex flex-col gap-6' aria-label='Navegação administrativa'>
+        <div class='space-y-1.5'>
+          <p class='px-3 text-xs font-medium uppercase tracking-wider text-slate-500'>Resumo</p>
+          <a href='{% url "dashboard" %}'
+             class='block rounded-lg px-3 py-2 text-sm transition focus:outline-none focus:ring-2 focus:ring-sky-400 {% if current == "dashboard" %}bg-emerald-500/10 text-emerald-400{% else %}text-slate-300 hover:bg-slate-800{% endif %}'>
+            Painel
+          </a>
+          <span class='block rounded-lg border border-slate-800 px-3 py-2 text-sm text-slate-500'>
+            Consultas
+            <span class='mt-1 block text-xs text-slate-700'>Estrutura</span>
+          </span>
+        </div>
+
+        <div class='space-y-1.5'>
+          <p class='px-3 text-xs font-medium uppercase tracking-wider text-slate-500'>Profissionais</p>
+          <a href='{% url "professionals:professional_list" %}'
+             class='block rounded-lg px-3 py-2 text-sm transition focus:outline-none focus:ring-2 focus:ring-sky-400 {% if current == "professional_list" or current == "professional_create" or current == "professional_update" or current == "professional_delete" %}bg-emerald-500/10 text-emerald-400{% else %}text-slate-300 hover:bg-slate-800{% endif %}'>
+            Profissionais
+          </a>
+          <a href='{% url "professionals:specialty_list" %}'
+             class='block rounded-lg px-3 py-2 text-sm transition focus:outline-none focus:ring-2 focus:ring-sky-400 {% if current == "specialty_list" or current == "specialty_create" or current == "specialty_update" or current == "specialty_delete" %}bg-emerald-500/10 text-emerald-400{% else %}text-slate-300 hover:bg-slate-800{% endif %}'>
+            Especialidades
+          </a>
+          <a href='/admin/accounts/patientprofile/'
+             class='block rounded-lg px-3 py-2 text-sm text-slate-300 transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400'>
+            Pacientes
+          </a>
+        </div>
+
+        <div class='space-y-1.5'>
+          <p class='px-3 text-xs font-medium uppercase tracking-wider text-slate-500'>Conteúdo</p>
+          <a href='{% url "clinic_content:price_list" %}'
+             class='block rounded-lg px-3 py-2 text-sm transition focus:outline-none focus:ring-2 focus:ring-sky-400 {% if current == "price_list" or current == "price_create" or current == "price_update" or current == "price_delete" %}bg-emerald-500/10 text-emerald-400{% else %}text-slate-300 hover:bg-slate-800{% endif %}'>
+            Preços
+          </a>
+          <a href='{% url "clinic_content:service_protocol_list" %}'
+             class='block rounded-lg px-3 py-2 text-sm transition focus:outline-none focus:ring-2 focus:ring-sky-400 {% if current == "service_protocol_list" or current == "service_protocol_create" or current == "service_protocol_update" or current == "service_protocol_delete" %}bg-emerald-500/10 text-emerald-400{% else %}text-slate-300 hover:bg-slate-800{% endif %}'>
+            Protocolos de atendimento
+          </a>
+          <a href='{% url "clinic_content:exam_protocol_list" %}'
+             class='block rounded-lg px-3 py-2 text-sm transition focus:outline-none focus:ring-2 focus:ring-sky-400 {% if current == "exam_protocol_list" or current == "exam_protocol_create" or current == "exam_protocol_update" or current == "exam_protocol_delete" %}bg-emerald-500/10 text-emerald-400{% else %}text-slate-300 hover:bg-slate-800{% endif %}'>
+            Protocolos de exames
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <main>
+      {% block dashboard_content %}{% endblock %}
+    </main>
+  </div>
+  {% endwith %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% comment %}
+Botão padrão do design system.
+
+Args:
+  variant: 'primary' (default) | 'secondary'
+  type:    valor do atributo type (default: 'button')
+  label:   texto do botão
+{% endcomment %}
+{% with variant=variant|default:'primary' type=type|default:'button' %}
+  {% if variant == 'secondary' %}
+    <button type='{{ type }}'
+            class='inline-flex items-center justify-center rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400'>
+      {{ label }}
+    </button>
+  {% else %}
+    <button type='{{ type }}'
+            class='inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-medium text-slate-950 shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950'>
+      {{ label }}
+    </button>
+  {% endif %}
+{% endwith %}

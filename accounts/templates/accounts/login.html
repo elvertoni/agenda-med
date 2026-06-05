@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Entrar — Agenda Clínica{% endblock %}
+
+{% block content %}
+  <div class='mx-auto w-full max-w-md'>
+    <div class='rounded-2xl border border-slate-800 bg-slate-900/60 p-8 shadow-xl shadow-black/20 backdrop-blur'>
+      <h1 class='text-2xl font-semibold tracking-tight text-slate-100'>Acesso da equipe</h1>
+      <p class='mt-2 text-sm text-slate-400'>Entre com seu e-mail e senha para acessar o painel.</p>
+
+      <form method='post' class='mt-6 space-y-4' novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class='rounded-xl border border-slate-800 border-l-4 border-l-rose-500 bg-slate-900 px-4 py-3 text-sm text-slate-200'>
+            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+
+        <div class='space-y-1.5'>
+          <label for='{{ form.username.id_for_label }}' class='block text-sm font-medium text-slate-300'>{{ form.username.label }}</label>
+          {{ form.username }}
+        </div>
+
+        <div class='space-y-1.5'>
+          <label for='{{ form.password.id_for_label }}' class='block text-sm font-medium text-slate-300'>{{ form.password.label }}</label>
+          {{ form.password }}
+        </div>
+
+        <input type='hidden' name='next' value='{{ next }}'>
+
+        <button type='submit'
+                class='inline-flex w-full items-center justify-center rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-medium text-slate-950 shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950'>
+          Entrar
+        </button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

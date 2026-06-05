@@ -1,0 +1,23 @@
+{% comment %}
+Campo de formulário padrão. Renderiza label, input e mensagem de erro.
+
+Args:
+  label:       texto do label
+  name:        atributo name do input
+  type:        tipo HTML (default: 'text')
+  value:       valor inicial (opcional)
+  placeholder: placeholder (opcional)
+  error:       mensagem de erro (opcional)
+{% endcomment %}
+{% with type=type|default:'text' %}
+  <div class='space-y-1.5'>
+    <label for='{{ name }}' class='block text-sm font-medium text-slate-300'>{{ label }}</label>
+    <input id='{{ name }}'
+           name='{{ name }}'
+           type='{{ type }}'
+           {% if value %}value='{{ value }}'{% endif %}
+           {% if placeholder %}placeholder='{{ placeholder }}'{% endif %}
+           class='block w-full rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2.5 text-slate-100 placeholder-slate-500 transition focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40' />
+    {% if error %}<p class='text-sm text-rose-400'>{{ error }}</p>{% endif %}
+  </div>
+{% endwith %}
