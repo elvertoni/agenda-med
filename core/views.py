@@ -1,4 +1,6 @@
+from django.apps import apps
 from django.urls import reverse
+from django.utils import timezone
 from django.views.generic import TemplateView
 
 from accounts.models import PatientProfile
@@ -35,6 +37,11 @@ class DashboardView(StaffRequiredMixin, TemplateView):
         )
 
         content_updates = self._get_recent_content_updates()
+        presence_confirmation_model = self._get_presence_confirmation_model()
+        presence_counts = self._get_presence_confirmation_counts(presence_confirmation_model)
+        recent_presence_confirmations = self._get_recent_presence_confirmations(
+            presence_confirmation_model,
+        )
 
         context.update(
             {
@@ -52,9 +59,17 @@ class DashboardView(StaffRequiredMixin, TemplateView):
                 'dashboard_cards': [
                     {
                         'label': 'Consultas',
-                        'value': '--',
-                        'description': 'Estrutura preparada para receber a agenda da Sprint 5.',
-                        'status': 'Sem scheduling',
+                        'value': presence_counts['total'],
+                        'description': (
+                            'Confirmações de presença vinculadas às consultas.'
+                            if presence_confirmation_model is not None
+                            else 'Estrutura preparada para receber confirmações de presença.'
+                        ),
+                        'status': (
+                            'Com confirmações'
+                            if presence_confirmation_model is not None
+                            else 'Sem confirmações'
+                        ),
                     },
                     {
                         'label': 'Profissionais ativos',
@@ -71,19 +86,24 @@ class DashboardView(StaffRequiredMixin, TemplateView):
                 ],
                 'appointment_view_cards': [
                     {
-                        'label': 'Hoje',
-                        'value': '--',
-                        'description': 'Grade diária aguardando a app de agendamento.',
+                        'label': 'Pendentes',
+                        'value': presence_counts['pending'],
+                        'description': 'Aguardam disparo ou processamento da confirmação.',
                     },
                     {
-                        'label': 'Solicitações',
-                        'value': '--',
-                        'description': 'Fila operacional prevista para a Sprint 5.',
+                        'label': 'Enviadas',
+                        'value': presence_counts['sent'],
+                        'description': 'Mensagens enviadas e ainda sem resposta final.',
                     },
                     {
-                        'label': 'Confirmações',
-                        'value': '--',
-                        'description': 'Status de presença entra na Sprint 7.',
+                        'label': 'Confirmadas',
+                        'value': presence_counts['confirmed'],
+                        'description': 'Pacientes que confirmaram presença.',
+                    },
+                    {
+                        'label': 'Não confirmadas',
+                        'value': presence_counts['not_confirmed'],
+                        'description': 'Pacientes que recusaram a presença.',
                     },
                 ],
                 'professional_view_cards': [
@@ -130,9 +150,70 @@ class DashboardView(StaffRequiredMixin, TemplateView):
                     'specialty',
                 ).order_by('-updated_at')[:4],
                 'recent_content_updates': content_updates,
+                'presence_confirmation_available': presence_confirmation_model is not None,
+                'recent_presence_confirmations': recent_presence_confirmations,
             },
         )
         return context
+
+    def _get_presence_confirmation_model(self):
+        try:
+            return apps.get_model('messaging', 'PresenceConfirmation')
+        except LookupError:
+            return None
+
+    def _get_presence_confirmation_counts(self, presence_confirmation_model):
+        counts = {
+            'total': 0,
+            'pending': 0,
+            'sent': 0,
+            'confirmed': 0,
+            'not_confirmed': 0,
+        }
+        if presence_confirmation_model is None:
+            return counts
+
+        queryset = presence_confirmation_model.objects.all()
+        counts['total'] = queryset.count()
+        counts['pending'] = queryset.filter(
+            status=presence_confirmation_model.Status.PENDING,
+        ).count()
+        counts['sent'] = queryset.filter(
+            status=presence_confirmation_model.Status.SENT,
+        ).count()
+        counts['confirmed'] = queryset.filter(
+            response=presence_confirmation_model.Response.CONFIRMED,
+        ).count()
+        counts['not_confirmed'] = queryset.filter(
+            response=presence_confirmation_model.Response.NOT_CONFIRMED,
+        ).count()
+        return counts
+
+    def _get_recent_presence_confirmations(self, presence_confirmation_model):
+        if presence_confirmation_model is None:
+            return []
+
+        now = timezone.now()
+        upcoming = presence_confirmation_model.objects.select_related(
+            'appointment',
+            'appointment__patient',
+            'appointment__professional',
+        ).filter(
+            status__in=[
+                presence_confirmation_model.Status.PENDING,
+                presence_confirmation_model.Status.SENT,
+            ],
+            appointment__scheduled_at__gte=now,
+        ).order_by('appointment__scheduled_at')[:5]
+
+        if upcoming:
+            return upcoming
+
+        return presence_confirmation_model.objects.select_related(
+            'appointment',
+            'appointment__patient',
+            'appointment__professional',
+        ).order_by('-updated_at')[:5]
 
     def _get_recent_content_updates(self):
         updates = []

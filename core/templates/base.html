@@ -15,11 +15,12 @@
       <a href='/' class='bg-gradient-to-r from-emerald-400 to-sky-400 bg-clip-text text-lg font-semibold text-transparent'>
         Agenda Clínica
       </a>
-      <div class='flex items-center gap-2 text-sm text-slate-300'>
+      <div class='flex flex-wrap items-center justify-end gap-2 text-sm text-slate-300'>
         <a class='rounded-lg px-3 py-2 hover:bg-slate-800' href='/'>Início</a>
         <a class='rounded-lg px-3 py-2 hover:bg-slate-800' href='{% url "public_professionals" %}'>Profissionais</a>
         <a class='rounded-lg px-3 py-2 hover:bg-slate-800' href='{% url "clinic_content_public:public_prices" %}'>Preços</a>
-        <a class='rounded-lg bg-emerald-500 px-3 py-2 font-medium text-slate-950 hover:bg-emerald-400' href='{% url "accounts:login" %}'>Entrar</a>
+        <a class='rounded-lg bg-emerald-500 px-3 py-2 font-medium text-slate-950 hover:bg-emerald-400' href='{% url "messaging:otp_request" %}'>Acesso do paciente</a>
+        <a class='rounded-lg border border-slate-700 px-3 py-2 font-medium text-slate-200 hover:bg-slate-800' href='{% url "accounts:login" %}'>Login da equipe</a>
       </div>
     </div>
   </nav>

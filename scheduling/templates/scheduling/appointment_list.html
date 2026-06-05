@@ -1,0 +1,73 @@
+{% extends 'layouts/dashboard_base.html' %}
+
+{% block title %}Consultas — Agenda Clínica{% endblock %}
+
+{% block dashboard_content %}
+  <div class='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
+    <div>
+      <h1 class='text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl'>Consultas</h1>
+      <p class='mt-1 text-sm text-slate-400'>Acompanhe consultas agendadas e seus status operacionais.</p>
+    </div>
+    <div class='flex flex-wrap gap-2'>
+      <a href='{% url "scheduling:availability_slot_list" %}'
+         class='inline-flex items-center justify-center rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800'>
+        Disponibilidade
+      </a>
+      <a href='{% url "scheduling:appointment_create" %}'
+         class='inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-medium text-slate-950 shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400'>
+        Nova consulta
+      </a>
+    </div>
+  </div>
+
+  <div class='mt-6 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur'>
+    <table class='min-w-full divide-y divide-slate-800 text-left text-sm'>
+      <thead class='bg-slate-900 text-slate-300'>
+        <tr>
+          <th class='px-4 py-3 font-medium'>Paciente</th>
+          <th class='px-4 py-3 font-medium'>Profissional</th>
+          <th class='px-4 py-3 font-medium'>Data</th>
+          <th class='px-4 py-3 font-medium'>Status</th>
+          <th class='px-4 py-3 font-medium'>Plano</th>
+          <th class='px-4 py-3 text-right font-medium'>Ações</th>
+        </tr>
+      </thead>
+      <tbody class='divide-y divide-slate-800 text-slate-200'>
+        {% for appointment in appointments %}
+          <tr>
+            <td class='px-4 py-3'>
+              <span class='block'>{{ appointment.patient.full_name }}</span>
+              <span class='text-xs text-slate-500'>{{ appointment.patient_age }} anos</span>
+            </td>
+            <td class='px-4 py-3'>
+              <span class='block'>{{ appointment.professional.full_name }}</span>
+              <span class='text-xs text-slate-500'>{{ appointment.professional.specialty }}</span>
+            </td>
+            <td class='px-4 py-3 text-slate-400'>{{ appointment.scheduled_at|date:'d/m/Y H:i' }}</td>
+            <td class='px-4 py-3'>
+              {% if appointment.status == 'scheduled' %}
+                <span class='inline-flex items-center rounded-full bg-sky-500/10 px-2.5 py-0.5 text-xs font-medium text-sky-400'>Agendada</span>
+              {% elif appointment.status == 'confirmed' %}
+                <span class='inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400'>Confirmada</span>
+              {% elif appointment.status == 'not_confirmed' %}
+                <span class='inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-300'>Não confirmada</span>
+              {% elif appointment.status == 'cancelled' %}
+                <span class='inline-flex items-center rounded-full bg-rose-500/10 px-2.5 py-0.5 text-xs font-medium text-rose-300'>Cancelada</span>
+              {% else %}
+                <span class='inline-flex items-center rounded-full bg-slate-800 px-2.5 py-0.5 text-xs font-medium text-slate-400'>Concluída</span>
+              {% endif %}
+            </td>
+            <td class='px-4 py-3 text-slate-400'>{{ appointment.health_plan_used|default:'-' }}</td>
+            <td class='px-4 py-3 text-right'>
+              <a class='text-sm text-sky-400 hover:text-sky-300' href='{% url "scheduling:appointment_update" appointment.pk %}'>Editar</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan='6' class='px-4 py-6 text-center text-sm text-slate-400'>Nenhuma consulta agendada ainda.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

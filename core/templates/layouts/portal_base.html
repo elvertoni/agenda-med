@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
 
 {% block nav %}
+{% url "portal_home" as portal_home_url %}
+{% url "portal_appointments" as portal_appointments_url %}
+{% url "portal_availability" as portal_availability_url %}
 <nav class='sticky top-0 z-40 border-b border-slate-800 bg-slate-950/80 backdrop-blur'>
   <div class='mx-auto flex max-w-6xl flex-col justify-between gap-3 px-4 py-3 sm:flex-row sm:items-center sm:px-6 lg:px-8'>
-    <a href='{% url "portal_home" %}' class='bg-gradient-to-r from-emerald-400 to-sky-400 bg-clip-text text-lg font-semibold text-transparent'>
+    <a href='{{ portal_home_url|default:"#"}}' class='bg-gradient-to-r from-emerald-400 to-sky-400 bg-clip-text text-lg font-semibold text-transparent'>
       Agenda Clínica
     </a>
     <div class='flex flex-wrap items-center gap-2 text-sm text-slate-300'>
@@ -27,16 +30,18 @@
 <div class='grid grid-cols-1 gap-6 lg:grid-cols-[16rem_1fr]'>
   <aside class='rounded-2xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6'>
     <nav class='flex flex-col gap-1'>
-      <a href='{% url "portal_home" %}'
+      <a href='{{ portal_home_url|default:"#"}}'
          class='rounded-lg px-3 py-2 text-sm {% if current == "portal_home" %}bg-emerald-500/10 text-emerald-400{% else %}text-slate-300 hover:bg-slate-800{% endif %}'>
         Início
       </a>
-      <span class='rounded-lg px-3 py-2 text-sm text-slate-500'>
+      <a href='{{ portal_appointments_url|default:"#"}}'
+         class='rounded-lg px-3 py-2 text-sm {% if current == "portal_appointments" %}bg-emerald-500/10 text-emerald-400{% else %}text-slate-300 hover:bg-slate-800{% endif %}'>
         Minhas consultas
-      </span>
-      <span class='rounded-lg px-3 py-2 text-sm text-slate-500'>
+      </a>
+      <a href='{{ portal_availability_url|default:"#"}}'
+         class='rounded-lg px-3 py-2 text-sm {% if current == "portal_availability" %}bg-emerald-500/10 text-emerald-400{% else %}text-slate-300 hover:bg-slate-800{% endif %}'>
         Disponibilidade
-      </span>
+      </a>
       <span class='rounded-lg px-3 py-2 text-sm text-slate-500'>
         Dados do paciente
       </span>

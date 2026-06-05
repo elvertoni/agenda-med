@@ -1,4 +1,4 @@
-# TASKS — Agenda Clínica
+a# TASKS — Agenda Clínica
 
 Checklist de execução das sprints. Extraído de [`PRD.md` §13](PRD.md#13-lista-de-tarefas). Esta é a lista operacional; em divergência, o PRD prevalece.
 
@@ -51,51 +51,51 @@ Checklist de execução das sprints. Extraído de [`PRD.md` §13](PRD.md#13-list
 - [x] 4.3 Portal do paciente (estrutura)
   - [x] 4.3.1 Layout do portal e navegação restrita
 
-## Sprint 5 — Agendamento (`scheduling`)
-- [ ] 5.1 Disponibilidade
-  - [ ] 5.1.1 Model `AvailabilitySlot` (status, FK profissional)
-  - [ ] 5.1.2 CBVs para gestão de disponibilidade pela equipe
-- [ ] 5.2 Consultas
-  - [ ] 5.2.1 Model `Appointment` (FKs, status, motivo, plano usado)
-  - [ ] 5.2.2 Fluxo de reserva transacional do slot
-  - [ ] 5.2.3 Derivação de idade a partir da data de nascimento
-- [ ] 5.3 Consulta no portal do paciente
-  - [ ] 5.3.1 Listagem das consultas do paciente
-  - [ ] 5.3.2 Visão de disponibilidade e profissionais
+## Sprint 5 — Agendamento (`scheduling`) [x]
+- [x] 5.1 Disponibilidade
+  - [x] 5.1.1 Model `AvailabilitySlot` (status, FK profissional)
+  - [x] 5.1.2 CBVs para gestão de disponibilidade pela equipe
+- [x] 5.2 Consultas
+  - [x] 5.2.1 Model `Appointment` (FKs, status, motivo, plano usado)
+  - [x] 5.2.2 Fluxo de reserva transacional do slot
+  - [x] 5.2.3 Derivação de idade a partir da data de nascimento
+- [x] 5.3 Consulta no portal do paciente
+  - [x] 5.3.1 Listagem das consultas do paciente
+  - [x] 5.3.2 Visão de disponibilidade e profissionais
 
-## Sprint 6 — Acesso por OTP (`messaging` — parte 1)
-- [ ] 6.1 Estrutura do OTP
-  - [ ] 6.1.1 Model `OtpCode` (código, expiração, uso único, tentativas)
-  - [ ] 6.1.2 Serviço de geração/validação de código
-- [ ] 6.2 Fluxo de acesso passwordless
-  - [ ] 6.2.1 Tela: informar número de WhatsApp
-  - [ ] 6.2.2 Envio do código via integração de WhatsApp
-  - [ ] 6.2.3 Tela: inserir código + validação e bloqueio por tentativas
-  - [ ] 6.2.4 Sessão do paciente após validação
+## Sprint 6 — Acesso por OTP (`messaging` — parte 1) [x]
+- [x] 6.1 Estrutura do OTP
+  - [x] 6.1.1 Model `OtpCode` (código, expiração, uso único, tentativas)
+  - [x] 6.1.2 Serviço de geração/validação de código
+- [x] 6.2 Fluxo de acesso passwordless
+  - [x] 6.2.1 Tela: informar número de WhatsApp
+  - [x] 6.2.2 Envio do código via integração de WhatsApp
+  - [x] 6.2.3 Tela: inserir código + validação e bloqueio por tentativas
+  - [x] 6.2.4 Sessão do paciente após validação
 
-## Sprint 7 — Confirmação de presença (`messaging` — parte 2)
-- [ ] 7.1 Modelagem
-  - [ ] 7.1.1 Model `PresenceConfirmation` (canal, envio, resposta, status)
-- [ ] 7.2 Disparo 24h antes
-  - [ ] 7.2.1 `signals.py` em `scheduling` para agendar a confirmação na criação da consulta
-  - [ ] 7.2.2 Rotina de disparo ~24h antes (comando de gestão)
-  - [ ] 7.2.3 Envio por WhatsApp e/ou e-mail
-- [ ] 7.3 Resposta e atualização
-  - [ ] 7.3.1 Registro de resposta (confirmado/não confirmado/sem resposta)
-  - [ ] 7.3.2 Atualização do status da consulta
-  - [ ] 7.3.3 Indicação no dashboard administrativo
+## Sprint 7 — Confirmação de presença (`messaging` — parte 2) [x]
+- [x] 7.1 Modelagem
+  - [x] 7.1.1 Model `PresenceConfirmation` (canal, envio, resposta, status)
+- [x] 7.2 Disparo 24h antes
+  - [x] 7.2.1 `signals.py` em `scheduling` para agendar a confirmação na criação da consulta
+  - [x] 7.2.2 Rotina de disparo ~24h antes (comando de gestão)
+  - [x] 7.2.3 Envio por WhatsApp e/ou e-mail
+- [x] 7.3 Resposta e atualização
+  - [x] 7.3.1 Registro de resposta (confirmado/não confirmado/sem resposta)
+  - [x] 7.3.2 Atualização do status da consulta
+  - [x] 7.3.3 Indicação no dashboard administrativo
 
-## Sprint 8 — Chatbot WhatsApp (integração)
-- [ ] 8.1 Camada de integração na app `messaging`
-  - [ ] 8.1.1 Webhook de entrada e roteamento de intenções
-  - [ ] 8.1.2 Consulta de preços e protocolos (conteúdo)
-  - [ ] 8.1.3 Consulta de agendas e oferta de horários
-  - [ ] 8.1.4 Registro de agendamento a partir da conversa
+## Sprint 8 — Chatbot WhatsApp (integração) [x]
+- [x] 8.1 Camada de integração na app `messaging`
+  - [x] 8.1.1 Webhook de entrada e roteamento de intenções
+  - [x] 8.1.2 Consulta de preços e protocolos (conteúdo)
+  - [x] 8.1.3 Consulta de agendas e oferta de horários
+  - [x] 8.1.4 Registro de agendamento a partir da conversa
 
-## Sprint 9 (final) — Testes
-- [ ] 9.1 Testes unitários por app (`accounts`, `professionals`, `scheduling`, `clinic_content`, `messaging`)
-- [ ] 9.2 Testes de fluxo (OTP, agendamento, confirmação)
-- [ ] 9.3 Cobertura mínima e ajustes
+## Sprint 9 (final) — Testes [x]
+- [x] 9.1 Testes unitários por app (`accounts`, `professionals`, `scheduling`, `clinic_content`, `messaging`)
+- [x] 9.2 Testes de fluxo (OTP, agendamento, confirmação)
+- [x] 9.3 Cobertura mínima e ajustes
 
 ## Sprint 10 (final) — Containerização
 - [ ] 10.1 `Dockerfile` da aplicação

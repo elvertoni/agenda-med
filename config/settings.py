@@ -42,7 +42,13 @@ INSTALLED_APPS = [
     'accounts',
     'professionals',
     'clinic_content',
+    'scheduling',
+    'messaging',
 ]
+
+OTP_CODE_TTL_MINUTES = 10
+OTP_MAX_ATTEMPTS = 3
+OTP_LOCK_MINUTES = 15
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -133,3 +139,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Evolution API Settings
+EVOLUTION_API_BASE_URL = os.environ.get('EVOLUTION_API_BASE_URL', 'http://localhost:8080')
+EVOLUTION_API_API_KEY = os.environ.get('EVOLUTION_API_API_KEY', 'change-me-key')
+EVOLUTION_API_INSTANCE_NAME = os.environ.get('EVOLUTION_API_INSTANCE_NAME', 'change-me-instance')

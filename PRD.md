@@ -169,17 +169,17 @@ flowchart TD
 
 ### Stack
 
-| Camada | Tecnologia | Observações |
-|---|---|---|
-| Linguagem | Python 3.12+ | PEP 8, aspas simples, código em inglês |
-| Framework | Django 5.x | Full-stack, Class Based Views priorizadas |
-| Frontend | Django Template Language (DTL) | **Sem SPA / framework JS de frontend** |
-| Estilo | TailwindCSS 3.x | Via `django-tailwind` ou CLI standalone do Tailwind |
-| Banco de dados | SQLite (padrão do Django) | Único SGBD no escopo |
-| Autenticação | `django.contrib.auth` (nativo) | Custom user com login por **e-mail** |
-| Integração WhatsApp | Provedor de API de WhatsApp (a definir) | Encapsulado na app `messaging` |
-| E-mail | `django.core.mail` | Confirmação de presença por e-mail |
-| Servidor (dev) | `runserver` | Docker apenas nas sprints finais |
+| Camada              | Tecnologia                              | Observações                                         |
+| ---------------------| -----------------------------------------| -----------------------------------------------------|
+| Linguagem           | Python 3.12+                            | PEP 8, aspas simples, código em inglês              |
+| Framework           | Django 5.x                              | Full-stack, Class Based Views priorizadas           |
+| Frontend            | Django Template Language (DTL)          | **Sem SPA / framework JS de frontend**              |
+| Estilo              | TailwindCSS 3.x                         | Via `django-tailwind` ou CLI standalone do Tailwind |
+| Banco de dados      | SQLite (padrão do Django)               | Único SGBD no escopo                                |
+| Autenticação        | `django.contrib.auth` (nativo)          | Custom user com login por **e-mail**                |
+| Integração WhatsApp | Provedor de API de WhatsApp (a definir) | Encapsulado na app `messaging`                      |
+| E-mail              | `django.core.mail`                      | Confirmação de presença por e-mail                  |
+| Servidor (dev)      | `runserver`                             | Docker apenas nas sprints finais                    |
 
 ### Separação em apps Django
 

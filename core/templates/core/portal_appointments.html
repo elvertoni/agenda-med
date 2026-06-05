@@ -1,0 +1,49 @@
+{% extends 'layouts/portal_base.html' %}
+
+{% block title %}Minhas consultas &middot; Agenda Clínica{% endblock %}
+
+{% block portal_content %}
+<section class='space-y-2'>
+  <p class='text-sm font-medium text-emerald-400'>Portal do paciente</p>
+  <h1 class='text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl'>Minhas consultas</h1>
+  <p class='text-slate-400'>Histórico e próximos atendimentos vinculados a {{ patient.full_name }}.</p>
+</section>
+
+<section class='mt-8 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60'>
+  <div class='overflow-x-auto'>
+    <table class='min-w-full divide-y divide-slate-800 text-left text-sm'>
+      <thead class='bg-slate-950/40 text-xs uppercase tracking-wider text-slate-400'>
+        <tr>
+          <th scope='col' class='px-4 py-3 font-medium'>Profissional</th>
+          <th scope='col' class='px-4 py-3 font-medium'>Data e hora</th>
+          <th scope='col' class='px-4 py-3 font-medium'>Status</th>
+          <th scope='col' class='px-4 py-3 font-medium'>Paciente</th>
+        </tr>
+      </thead>
+      <tbody class='divide-y divide-slate-800'>
+        {% for appointment in appointments %}
+          <tr>
+            <td class='px-4 py-4'>
+              <p class='font-medium text-slate-100'>{{ appointment.professional.full_name }}</p>
+              <p class='mt-1 text-xs text-slate-500'>{{ appointment.professional.specialty.name }}</p>
+            </td>
+            <td class='px-4 py-4 text-slate-300'>{{ appointment.scheduled_at|date:'d/m/Y H:i' }}</td>
+            <td class='px-4 py-4'>
+              <span class='inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-300'>
+                {{ appointment.get_status_display }}
+              </span>
+            </td>
+            <td class='px-4 py-4 text-slate-400'>{{ appointment.patient_age }} anos</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan='4' class='px-4 py-8 text-center text-slate-400'>
+              Nenhuma consulta encontrada para este paciente.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

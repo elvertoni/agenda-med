@@ -6,27 +6,65 @@
 <section class='space-y-2'>
   <p class='text-sm font-medium text-emerald-400'>Área restrita</p>
   <h1 class='text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl'>Meu portal</h1>
-  <p class='text-slate-400'>Olá, {{ patient.full_name }}.</p>
+  <p class='text-slate-400'>Olá, {{ patient.full_name }}. Consulte seus agendamentos e os próximos horários disponíveis.</p>
 </section>
 
 <section class='mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
   <article class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur'>
     <p class='text-xs font-medium uppercase tracking-wider text-slate-400'>Consultas</p>
-    <h2 class='mt-2 text-lg font-semibold text-slate-100'>Minhas consultas</h2>
-    <p class='mt-2 text-sm text-slate-400'>A consulta de agendamentos estará disponível quando o agendamento online for liberado.</p>
-    <p class='mt-4 text-sm text-slate-500'>Indisponível no momento</p>
+    <h2 class='mt-2 text-3xl font-semibold text-slate-100'>{{ upcoming_appointments|length }}</h2>
+    <p class='mt-2 text-sm text-slate-400'>Próximas consultas agendadas para este perfil.</p>
   </article>
   <article class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur'>
     <p class='text-xs font-medium uppercase tracking-wider text-slate-400'>Disponibilidade</p>
-    <h2 class='mt-2 text-lg font-semibold text-slate-100'>Profissionais</h2>
-    <p class='mt-2 text-sm text-slate-400'>Os horários dos profissionais aparecerão aqui quando o agendamento online for liberado.</p>
-    <p class='mt-4 text-sm text-slate-500'>Indisponível no momento</p>
+    <h2 class='mt-2 text-3xl font-semibold text-slate-100'>{{ available_slots|length }}</h2>
+    <p class='mt-2 text-sm text-slate-400'>Horários disponíveis mais próximos para profissionais ativos.</p>
   </article>
   <article class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur'>
     <p class='text-xs font-medium uppercase tracking-wider text-slate-400'>Cadastro</p>
     <h2 class='mt-2 text-lg font-semibold text-slate-100'>Dados do paciente</h2>
     <p class='mt-2 text-sm text-slate-400'>Os principais dados cadastrais ficam vinculados ao seu perfil de paciente.</p>
     <p class='mt-4 text-sm text-slate-500'>{{ patient.whatsapp_number }}</p>
+  </article>
+</section>
+
+<section class='mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2'>
+  <article class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6'>
+    <div class='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+      <h2 class='text-lg font-semibold text-slate-100'>Próximas consultas</h2>
+      {% url "portal_appointments" as portal_appointments_url %}
+      <a href='{{ portal_appointments_url|default:"#"}}' class='text-sm font-medium text-sky-400 hover:text-sky-300'>Ver todas</a>
+    </div>
+    <div class='mt-4 divide-y divide-slate-800'>
+      {% for appointment in upcoming_appointments %}
+        <div class='py-4 first:pt-0 last:pb-0'>
+          <p class='text-sm font-medium text-slate-100'>{{ appointment.professional.full_name }}</p>
+          <p class='mt-1 text-sm text-slate-400'>{{ appointment.professional.specialty.name }} · {{ appointment.scheduled_at|date:'d/m/Y H:i' }}</p>
+          <p class='mt-2 text-xs font-medium uppercase tracking-wider text-emerald-400'>{{ appointment.get_status_display }}</p>
+        </div>
+      {% empty %}
+        <p class='text-sm text-slate-400'>Nenhuma consulta futura encontrada para este paciente.</p>
+      {% endfor %}
+    </div>
+  </article>
+
+  <article class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6'>
+    <div class='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+      <h2 class='text-lg font-semibold text-slate-100'>Disponibilidade recente</h2>
+      {% url "portal_availability" as portal_availability_url %}
+      <a href='{{ portal_availability_url|default:"#"}}' class='text-sm font-medium text-sky-400 hover:text-sky-300'>Ver horários</a>
+    </div>
+    <div class='mt-4 divide-y divide-slate-800'>
+      {% for slot in available_slots %}
+        <div class='py-4 first:pt-0 last:pb-0'>
+          <p class='text-sm font-medium text-slate-100'>{{ slot.professional.full_name }}</p>
+          <p class='mt-1 text-sm text-slate-400'>{{ slot.professional.specialty.name }} · {{ slot.starts_at|date:'d/m/Y H:i' }} às {{ slot.ends_at|date:'H:i' }}</p>
+          <p class='mt-2 text-xs font-medium uppercase tracking-wider text-emerald-400'>{{ slot.get_status_display }}</p>
+        </div>
+      {% empty %}
+        <p class='text-sm text-slate-400'>Nenhum horário disponível no momento.</p>
+      {% endfor %}
+    </div>
   </article>
 </section>
 

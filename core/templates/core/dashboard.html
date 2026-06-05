@@ -42,12 +42,16 @@
     <div class='flex items-center justify-between gap-4'>
       <div>
         <h2 class='text-lg font-semibold text-slate-100'>Consultas</h2>
-        <p class='mt-2 text-sm text-slate-400'>Operação preparada para exibir a agenda quando o módulo de agendamento estiver disponível.</p>
+        <p class='mt-2 text-sm text-slate-400'>Acompanhamento operacional das confirmações de presença vinculadas às consultas.</p>
       </div>
-      <span class='rounded-full border border-slate-800 px-2.5 py-0.5 text-xs font-medium text-slate-400'>Placeholder operacional</span>
+      {% if presence_confirmation_available %}
+        <span class='rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400'>Confirmações ativas</span>
+      {% else %}
+        <span class='rounded-full border border-slate-800 px-2.5 py-0.5 text-xs font-medium text-slate-400'>Aguardando módulo</span>
+      {% endif %}
     </div>
 
-    <div class='mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+    <div class='mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4'>
       {% for card in appointment_view_cards %}
         <div class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur'>
           <p class='text-xs font-medium uppercase tracking-wider text-slate-400'>{{ card.label }}</p>
@@ -55,6 +59,53 @@
           <p class='mt-2 text-sm text-slate-400'>{{ card.description }}</p>
         </div>
       {% endfor %}
+    </div>
+
+    <div class='mt-6 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur'>
+      <table class='min-w-full divide-y divide-slate-800 text-left text-sm'>
+        <thead class='bg-slate-900 text-slate-300'>
+          <tr>
+            <th class='px-4 py-3 font-medium'>Paciente</th>
+            <th class='px-4 py-3 font-medium'>Profissional</th>
+            <th class='px-4 py-3 font-medium'>Consulta</th>
+            <th class='px-4 py-3 font-medium'>Envio</th>
+            <th class='px-4 py-3 font-medium'>Resposta</th>
+          </tr>
+        </thead>
+        <tbody class='divide-y divide-slate-800 text-slate-200'>
+          {% for confirmation in recent_presence_confirmations %}
+            <tr>
+              <td class='px-4 py-3'>{{ confirmation.appointment.patient.full_name }}</td>
+              <td class='px-4 py-3 text-slate-400'>{{ confirmation.appointment.professional.full_name }}</td>
+              <td class='px-4 py-3 text-slate-400'>{{ confirmation.appointment.scheduled_at|date:'d/m/Y H:i' }}</td>
+              <td class='px-4 py-3'>
+                {% if confirmation.status == 'pending' %}
+                  <span class='inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-300'>Pendente</span>
+                {% elif confirmation.status == 'sent' %}
+                  <span class='inline-flex items-center rounded-full bg-sky-500/10 px-2.5 py-0.5 text-xs font-medium text-sky-300'>Enviada</span>
+                {% elif confirmation.status == 'responded' %}
+                  <span class='inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400'>Respondida</span>
+                {% else %}
+                  <span class='inline-flex items-center rounded-full bg-rose-500/10 px-2.5 py-0.5 text-xs font-medium text-rose-300'>{{ confirmation.get_status_display }}</span>
+                {% endif %}
+              </td>
+              <td class='px-4 py-3'>
+                {% if confirmation.response == 'confirmed' %}
+                  <span class='inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400'>Confirmado</span>
+                {% elif confirmation.response == 'not_confirmed' %}
+                  <span class='inline-flex items-center rounded-full bg-rose-500/10 px-2.5 py-0.5 text-xs font-medium text-rose-300'>Não confirmado</span>
+                {% else %}
+                  <span class='inline-flex items-center rounded-full bg-slate-800 px-2.5 py-0.5 text-xs font-medium text-slate-400'>Sem resposta</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan='5' class='px-4 py-6 text-center text-sm text-slate-400'>Nenhuma confirmação de presença encontrada.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </section>
 
