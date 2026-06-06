@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=True
+      - DJANGO_SECRET_KEY=django-insecure-dev-only-change-me
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - EVOLUTION_API_BASE_URL=https://evoapi.tonicoimbra.com
+      - EVOLUTION_API_API_KEY=G0Ea13Q4xbXZX2Aw3HVWmUphMkYByTOazB1D8Kfynbf46WXXqmpbfCb2scqGT65DfpfryVz95P0A7Exep4CRqKuly1sx2CcE551ZPyuLjI2Y9IF9PdZAD2ScN6j7ovmC
+      - EVOLUTION_API_INSTANCE_NAME=CLINICA
