@@ -1,6 +1,10 @@
+import json
 import logging
 import re
+import urllib.error
+import urllib.request
 
+from django.conf import settings
 from django.utils import timezone
 
 from clinic_content.models import ExamProtocol, PriceItem, ServiceProtocol
@@ -123,6 +127,87 @@ def _send_reply(phone_number, message):
     gateway.send_message(whatsapp_number=phone_number, message=message)
 
 
+def call_deepseek_v4_flash(message_text, system_prompt):
+    api_key = getattr(settings, 'OPENCODE_GO_API_KEY', '')
+    if not api_key:
+        logger.warning('OPENCODE_GO_API_KEY not configured. Falling back to default responses.')
+        return None
+
+    base_url = getattr(settings, 'OPENCODE_GO_BASE_URL', 'https://opencode.ai/zen/go/v1')
+    model = getattr(settings, 'OPENCODE_GO_MODEL', 'deepseek-v4-flash')
+    url = f"{base_url.rstrip('/')}/chat/completions"
+
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    }
+
+    payload = {
+        'model': model,
+        'messages': [
+            {'role': 'system', 'content': system_prompt},
+            {'role': 'user', 'content': message_text}
+        ]
+    }
+
+    data = json.dumps(payload).encode('utf-8')
+    req = urllib.request.Request(url, data=data, headers=headers, method='POST')
+    try:
+        with urllib.request.urlopen(req, timeout=15) as response:
+            res_data = json.loads(response.read().decode('utf-8'))
+            return res_data['choices'][0]['message']['content'].strip()
+    except Exception as e:
+        logger.error('Failed to query DeepSeek-v4-flash via OpenCode Go: %s', e)
+        return None
+
+
+def _get_ai_response(message_text):
+    # Fetch price items
+    prices = PriceItem.objects.filter(is_active=True).select_related('specialty')
+    prices_list = []
+    current_spec = None
+    for item in prices:
+        if item.specialty.name != current_spec:
+            current_spec = item.specialty.name
+            prices_list.append(f'\n🏥 {current_spec}:')
+        desc = f' — {item.description}' if item.description else ''
+        prices_list.append(f'  • {item.name}{desc}: R$ {item.price:.2f}')
+    prices_text = '\n'.join(prices_list) if prices_list else 'Nenhum preço cadastrado no momento.'
+
+    # Fetch protocols
+    service_protocols = ServiceProtocol.objects.filter(is_active=True)
+    exam_protocols = ExamProtocol.objects.filter(is_active=True).select_related('specialty')
+    protocols_list = []
+    if exam_protocols.exists():
+        protocols_list.append('Protocolos de exames:')
+        for ep in exam_protocols:
+            protocols_list.append(f'🔬 {ep.exam_name} ({ep.specialty.name}): {ep.preparation_instructions}')
+    if service_protocols.exists():
+        protocols_list.append('\nProtocolos de atendimento:')
+        for sp in service_protocols:
+            protocols_list.append(f'📋 {sp.title}: {sp.content}')
+    protocols_text = '\n'.join(protocols_list) if protocols_list else 'Nenhum protocolo cadastrado no momento.'
+
+    system_prompt = (
+        'Você é o assistente virtual inteligente de atendimento da Clínica Médica.\n'
+        'Seu objetivo é ajudar os pacientes com dúvidas sobre preços, exames, atendimentos e agendamento.\n\n'
+        'Aqui estão as informações oficiais e atualizadas da clínica. Use apenas estas informações para responder a dúvidas de preços e protocolos:\n\n'
+        '[TABELA DE PREÇOS]\n'
+        f'{prices_text}\n\n'
+        '[PROTOCOLOS DE ATENDIMENTO E EXAME]\n'
+        f'{protocols_text}\n\n'
+        '[DIRETRIZES DE AGENDAMENTO]\n'
+        '- Para agendar uma consulta ou ver os horários disponíveis, o paciente deve iniciar o fluxo escrevendo a palavra "agendar" ou "marcar consulta".\n'
+        '- Se o paciente demonstrar interesse em agendar, oriente-o de forma curta e direta a digitar "agendar".\n\n'
+        '[DIRETRIZES DE RESPOSTA]\n'
+        '- Responda sempre em português brasileiro de forma educada, prestativa, simpática e muito objetiva (evite textos excessivamente longos).\n'
+        '- Nunca invente informações de preços ou protocolos que não estejam listados acima. Se não souber ou não encontrar a informação nas listas acima, responda educadamente que não possui essa informação e oriente o paciente a solicitar falar com a recepção humana.'
+    )
+
+    return call_deepseek_v4_flash(message_text, system_prompt)
+
+
 def handle_incoming(phone_number, message_text):
     session = _get_or_create_session(phone_number)
     intent = parse_intent(message_text, session.state)
@@ -133,22 +218,48 @@ def handle_incoming(phone_number, message_text):
         intent,
     )
 
-    handler = {
-        'greeting': _handle_greeting,
-        'prices': _handle_prices,
-        'protocols': _handle_protocols,
-        'availability': _handle_availability,
-        'booking_start': _handle_booking_start,
-        'select_specialty': _handle_select_specialty,
-        'select_slot': _handle_select_slot,
-        'confirm_booking': _handle_confirm_booking,
-        'awaiting_confirm': _handle_awaiting_confirm,
-        'cancel': _handle_cancel,
-        'help': _handle_help,
-        'unknown': _handle_unknown,
-    }.get(intent, _handle_unknown)
+    # Se a sessão não estiver IDLE, ela está no meio de um fluxo de agendamento guiado
+    if session.state != ChatSession.State.IDLE:
+        handler = {
+            'select_specialty': _handle_select_specialty,
+            'select_slot': _handle_select_slot,
+            'confirm_booking': _handle_confirm_booking,
+            'awaiting_confirm': _handle_awaiting_confirm,
+            'cancel': _handle_cancel,
+        }.get(intent, _handle_unknown)
+        response = handler(session, message_text)
+        _send_reply(phone_number, response)
+        return response
 
-    response = handler(session, message_text)
+    # Se a intenção for iniciar agendamento, ver horários ou cancelar explicitamente
+    if intent in ('booking_start', 'availability', 'cancel'):
+        handler = {
+            'booking_start': _handle_booking_start,
+            'availability': _handle_availability,
+            'cancel': _handle_cancel,
+        }[intent]
+        response = handler(session, message_text)
+        _send_reply(phone_number, response)
+        return response
+
+    # Para conversas gerais, preços, protocolos, ajuda ou desconhecidos, usamos o DeepSeek
+    ai_response = None
+    if getattr(settings, 'OPENCODE_GO_API_KEY', ''):
+        ai_response = _get_ai_response(message_text)
+
+    if ai_response:
+        response = ai_response
+    else:
+        # Fallback para handlers estáticos originais
+        handler = {
+            'greeting': _handle_greeting,
+            'prices': _handle_prices,
+            'protocols': _handle_protocols,
+            'help': _handle_help,
+            'unknown': _handle_unknown,
+        }.get(intent, _handle_unknown)
+        response = handler(session, message_text)
+
     _send_reply(phone_number, response)
     return response
 
