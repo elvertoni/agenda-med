@@ -16,8 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy pyproject.toml and install Python dependencies
 COPY pyproject.toml /app/
 RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir . \
-    && pip install --no-cache-dir gunicorn
+    && pip install --no-cache-dir .
 
 # Copy project files
 COPY . /app/
