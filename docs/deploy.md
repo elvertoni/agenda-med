@@ -85,7 +85,7 @@ A Evolution API é usada para:
 O webhook deve ser configurado na instância WhatsApp para enviar mensagens recebidas ao chatbot:
 
 ```bash
-curl -X PUT "https://evoapi.tonicoimbra.com/webhook/set/CLINICA" \
+curl -X POST "https://evoapi.tonicoimbra.com/webhook/set/CLINICA" \
   -H "apikey: SUA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
