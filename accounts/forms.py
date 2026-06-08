@@ -4,9 +4,11 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, Set
 from .models import User
 
 INPUT_CLASSES = (
-    'block w-full rounded-xl border border-slate-700 bg-slate-900 '
-    'px-3.5 py-2.5 text-slate-100 placeholder-slate-500 transition '
-    'focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40'
+    'block w-full rounded-xl border border-slate-300 bg-white '
+    'px-3.5 py-2.5 text-slate-900 placeholder-slate-400 transition '
+    'focus:border-health-500 focus:outline-none focus:ring-2 focus:ring-health-400/40 '
+    'dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder-slate-500 '
+    'dark:focus:border-health-400'
 )
 
 
@@ -60,6 +62,9 @@ class UserRegistrationForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email', 'full_name']
+        labels = {
+            'full_name': 'Nome Completo',
+        }
         widgets = {
             'email': forms.EmailInput(attrs={
                 'class': INPUT_CLASSES,
