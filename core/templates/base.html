@@ -4,30 +4,55 @@
 <head>
   <meta charset='utf-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <meta name="description" content="Agenda Clínica - Sistema de agendamento online e atendimento automatizado via WhatsApp para consultas e exames.">
-  <meta property="og:title" content="Agenda Clínica">
-  <meta property="og:description" content="Agendamento online e atendimento automatizado via WhatsApp para consultas e exames.">
-  <meta property="og:type" content="website">
+  <meta name='description' content='Agenda Clínica — Sistema de agendamento online e atendimento via WhatsApp para consultas e exames.'>
+  <meta property='og:title' content='Agenda Clínica'>
+  <meta property='og:description' content='Agendamento online e atendimento via WhatsApp para consultas e exames.'>
+  <meta property='og:type' content='website'>
   <title>{% block title %}Agenda Clínica{% endblock %}</title>
+  <link rel='preconnect' href='https://fonts.googleapis.com'>
+  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+  <link href='https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap' rel='stylesheet'>
+  <link rel='stylesheet' href='{% static "css/design-system.css" %}'>
   <link rel='stylesheet' href='{% static "css/output.css" %}'>
+  <script>
+    (function () {
+      const stored = localStorage.getItem('agenda-theme');
+      if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
 </head>
-<body class='min-h-full bg-slate-950 font-sans text-slate-100 antialiased'>
+<body class='min-h-full bg-slate-50 font-sans text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100'>
 
   {% block nav %}
-  <nav class='sticky top-0 z-40 border-b border-slate-800 bg-slate-950/80 backdrop-blur'>
-    <div class='mx-auto flex max-w-6xl items-center justify-between px-4 py-3'>
-      <a href='/' class='bg-gradient-to-r from-emerald-400 to-sky-400 bg-clip-text text-lg font-semibold text-transparent'>
+  <nav class='sticky top-0 z-40 bg-navy-900 shadow-navy'>
+    <div class='mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8'>
+      <a href='/' class='font-display text-lg font-normal tracking-wide text-white hover:text-blue-200 transition-colors'>
         Agenda Clínica
       </a>
-      <div class='flex flex-wrap items-center justify-end gap-2 text-sm text-slate-300'>
-        <a class='rounded-lg px-3 py-2 hover:bg-slate-800' href='/'>Início</a>
-        <a class='rounded-lg px-3 py-2 hover:bg-slate-800' href='{% url "public_professionals" %}'>Profissionais</a>
-        <a class='rounded-lg px-3 py-2 hover:bg-slate-800' href='{% url "clinic_content_public:public_prices" %}'>Preços</a>
-        <a class='rounded-lg bg-emerald-500 px-3 py-2 font-medium text-slate-950 hover:bg-emerald-400' href='{% url "messaging:otp_request" %}'>Acesso do paciente</a>
-        <a class='rounded-lg border border-slate-700 px-3 py-2 font-medium text-slate-200 hover:bg-slate-800' href='{% url "accounts:signup" %}'>Cadastre-se</a>
-        <a class='rounded-lg border border-slate-700 px-3 py-2 font-medium text-slate-200 hover:bg-slate-800' href='{% url "accounts:login" %}'>Login da equipe</a>
+      <div class='flex flex-wrap items-center justify-end gap-1 text-sm'>
+        <a class='rounded-lg px-3 py-2 text-blue-200 transition hover:bg-navy-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-health-400'
+           href='/'>Início</a>
+        <a class='rounded-lg px-3 py-2 text-blue-200 transition hover:bg-navy-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-health-400'
+           href='{% url "public_professionals" %}'>Profissionais</a>
+        <a class='rounded-lg px-3 py-2 text-blue-200 transition hover:bg-navy-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-health-400'
+           href='{% url "clinic_content_public:public_prices" %}'>Preços</a>
+        <a class='rounded-lg bg-health-600 px-3 py-2 font-medium text-white transition hover:bg-health-500 focus:outline-none focus:ring-2 focus:ring-health-400 focus:ring-offset-2 focus:ring-offset-navy-900'
+           href='{% url "messaging:otp_request" %}'>Acesso do paciente</a>
+        <a class='rounded-lg border border-navy-700 px-3 py-2 text-blue-200 transition hover:bg-navy-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-health-400'
+           href='{% url "accounts:login" %}'>Login da equipe</a>
+        <button id='theme-toggle'
+                aria-label='Alternar tema claro/escuro'
+                class='ml-1 rounded-lg p-2 text-blue-300 transition hover:bg-navy-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-health-400'>
+          <svg id='icon-sun' class='hidden h-5 w-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'>
+            <path stroke-linecap='round' stroke-linejoin='round' d='M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 7a5 5 0 1 1 0 10A5 5 0 0 1 12 7z'/>
+          </svg>
+          <svg id='icon-moon' class='h-5 w-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'>
+            <path stroke-linecap='round' stroke-linejoin='round' d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/>
+          </svg>
+        </button>
       </div>
-
     </div>
   </nav>
   {% endblock %}
@@ -44,12 +69,39 @@
     {% block content %}{% endblock %}
   </main>
 
-  <footer class='mt-16 border-t border-slate-800'>
-    <div class='mx-auto flex max-w-6xl flex-col items-start justify-between gap-2 px-4 py-6 text-sm text-slate-400 sm:flex-row sm:items-center sm:px-6 lg:px-8'>
+  <footer class='mt-16 border-t border-slate-200 dark:border-slate-800'>
+    <div class='mx-auto flex max-w-6xl flex-col items-start justify-between gap-2 px-4 py-6 text-sm text-slate-500 dark:text-slate-400 sm:flex-row sm:items-center sm:px-6 lg:px-8'>
       <span>&copy; Agenda Clínica</span>
       <span>Atendimento principal pelo WhatsApp</span>
     </div>
   </footer>
 
+  <script>
+    (function () {
+      const btn = document.getElementById('theme-toggle');
+      const sun = document.getElementById('icon-sun');
+      const moon = document.getElementById('icon-moon');
+      const html = document.documentElement;
+
+      function syncIcons() {
+        if (html.classList.contains('dark')) {
+          sun.classList.remove('hidden');
+          moon.classList.add('hidden');
+        } else {
+          sun.classList.add('hidden');
+          moon.classList.remove('hidden');
+        }
+      }
+
+      syncIcons();
+
+      btn.addEventListener('click', function () {
+        html.classList.toggle('dark');
+        const theme = html.classList.contains('dark') ? 'dark' : 'light';
+        localStorage.setItem('agenda-theme', theme);
+        syncIcons();
+      });
+    })();
+  </script>
 </body>
 </html>

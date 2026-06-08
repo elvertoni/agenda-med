@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, FormView, ListView, UpdateView
 
 from core.mixins import StaffRequiredMixin
+from professionals.models import Professional
 
 from .forms import AppointmentCreateForm, AppointmentUpdateForm, AvailabilitySlotForm
 from .models import Appointment, AvailabilitySlot
@@ -67,12 +68,32 @@ class AppointmentListView(StaffRequiredMixin, ListView):
     model = Appointment
     template_name = 'scheduling/appointment_list.html'
     context_object_name = 'appointments'
-    queryset = Appointment.objects.select_related(
-        'patient',
-        'professional',
-        'professional__specialty',
-        'availability_slot',
-    )
+
+    def get_queryset(self):
+        qs = Appointment.objects.select_related(
+            'patient',
+            'professional',
+            'professional__specialty',
+            'availability_slot',
+        )
+        professional_pk = self.request.GET.get('professional')
+        if professional_pk:
+            qs = qs.filter(professional_id=professional_pk)
+
+        status = self.request.GET.get('status')
+        if status:
+            qs = qs.filter(status=status)
+
+        date = self.request.GET.get('date')
+        if date:
+            qs = qs.filter(scheduled_at__date=date)
+
+        return qs
+
+    def get_context_data(self, **kwargs: object) -> dict:
+        context = super().get_context_data(**kwargs)
+        context['filter_professionals'] = Professional.objects.filter(is_active=True).order_by('full_name')
+        return context
 
 
 class AppointmentCreateView(StaffRequiredMixin, FormView):

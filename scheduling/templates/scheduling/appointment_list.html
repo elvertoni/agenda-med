@@ -3,71 +3,128 @@
 {% block title %}Consultas — Agenda Clínica{% endblock %}
 
 {% block dashboard_content %}
-  <div class='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
+  <div class='flex flex-wrap items-start justify-between gap-4'>
     <div>
-      <h1 class='text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl'>Consultas</h1>
-      <p class='mt-1 text-sm text-slate-400'>Acompanhe consultas agendadas e seus status operacionais.</p>
+      <p class='text-xs font-medium uppercase tracking-wider text-health-600 dark:text-health-400'>Gestão de agenda</p>
+      <h1 class='font-display mt-1 text-2xl font-normal text-slate-900 dark:text-slate-100'>Consultas</h1>
+      <p class='mt-1 text-sm text-slate-500 dark:text-slate-400'>Acompanhe consultas agendadas e seus status operacionais.</p>
     </div>
     <div class='flex flex-wrap gap-2'>
       <a href='{% url "scheduling:availability_slot_list" %}'
-         class='inline-flex items-center justify-center rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800'>
+         class='inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800'>
         Disponibilidade
       </a>
       <a href='{% url "scheduling:appointment_create" %}'
-         class='inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-medium text-slate-950 shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400'>
-        Nova consulta
+         class='inline-flex items-center justify-center rounded-xl bg-health-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-health-500 focus:outline-none focus:ring-2 focus:ring-health-500'>
+        + Nova consulta
       </a>
     </div>
   </div>
 
-  <div class='mt-6 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur'>
-    <table class='min-w-full divide-y divide-slate-800 text-left text-sm'>
-      <thead class='bg-slate-900 text-slate-300'>
-        <tr>
-          <th class='px-4 py-3 font-medium'>Paciente</th>
-          <th class='px-4 py-3 font-medium'>Profissional</th>
-          <th class='px-4 py-3 font-medium'>Data</th>
-          <th class='px-4 py-3 font-medium'>Status</th>
-          <th class='px-4 py-3 font-medium'>Plano</th>
-          <th class='px-4 py-3 text-right font-medium'>Ações</th>
-        </tr>
-      </thead>
-      <tbody class='divide-y divide-slate-800 text-slate-200'>
-        {% for appointment in appointments %}
-          <tr>
-            <td class='px-4 py-3'>
-              <span class='block'>{{ appointment.patient.full_name }}</span>
-              <span class='text-xs text-slate-500'>{{ appointment.patient_age }} anos</span>
-            </td>
-            <td class='px-4 py-3'>
-              <span class='block'>{{ appointment.professional.full_name }}</span>
-              <span class='text-xs text-slate-500'>{{ appointment.professional.specialty }}</span>
-            </td>
-            <td class='px-4 py-3 text-slate-400'>{{ appointment.scheduled_at|date:'d/m/Y H:i' }}</td>
-            <td class='px-4 py-3'>
-              {% if appointment.status == 'scheduled' %}
-                <span class='inline-flex items-center rounded-full bg-sky-500/10 px-2.5 py-0.5 text-xs font-medium text-sky-400'>Agendada</span>
-              {% elif appointment.status == 'confirmed' %}
-                <span class='inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400'>Confirmada</span>
-              {% elif appointment.status == 'not_confirmed' %}
-                <span class='inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-300'>Não confirmada</span>
-              {% elif appointment.status == 'cancelled' %}
-                <span class='inline-flex items-center rounded-full bg-rose-500/10 px-2.5 py-0.5 text-xs font-medium text-rose-300'>Cancelada</span>
-              {% else %}
-                <span class='inline-flex items-center rounded-full bg-slate-800 px-2.5 py-0.5 text-xs font-medium text-slate-400'>Concluída</span>
-              {% endif %}
-            </td>
-            <td class='px-4 py-3 text-slate-400'>{{ appointment.health_plan_used|default:'-' }}</td>
-            <td class='px-4 py-3 text-right'>
-              <a class='text-sm text-sky-400 hover:text-sky-300' href='{% url "scheduling:appointment_update" appointment.pk %}'>Editar</a>
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td colspan='6' class='px-4 py-6 text-center text-sm text-slate-400'>Nenhuma consulta agendada ainda.</td>
-          </tr>
+  {# ── Filtros ────────────────────────────────────────── #}
+  <form method='get' class='mt-6 flex flex-wrap items-end gap-3'>
+    <div class='flex-1 min-w-[180px]'>
+      <label for='filter-professional' class='block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1'>Profissional</label>
+      <select id='filter-professional' name='professional'
+              class='block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-health-500 focus:outline-none focus:ring-2 focus:ring-health-400/40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100'>
+        <option value=''>Todos</option>
+        {% for prof in filter_professionals %}
+          <option value='{{ prof.pk }}' {% if request.GET.professional == prof.pk|stringformat:"s" %}selected{% endif %}>
+            {{ prof.full_name }}
+          </option>
         {% endfor %}
-      </tbody>
-    </table>
+      </select>
+    </div>
+    <div class='flex-1 min-w-[150px]'>
+      <label for='filter-status' class='block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1'>Status</label>
+      <select id='filter-status' name='status'
+              class='block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-health-500 focus:outline-none focus:ring-2 focus:ring-health-400/40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100'>
+        <option value=''>Todos</option>
+        <option value='scheduled' {% if request.GET.status == 'scheduled' %}selected{% endif %}>Agendada</option>
+        <option value='confirmed' {% if request.GET.status == 'confirmed' %}selected{% endif %}>Confirmada</option>
+        <option value='not_confirmed' {% if request.GET.status == 'not_confirmed' %}selected{% endif %}>Não confirmada</option>
+        <option value='cancelled' {% if request.GET.status == 'cancelled' %}selected{% endif %}>Cancelada</option>
+        <option value='completed' {% if request.GET.status == 'completed' %}selected{% endif %}>Concluída</option>
+      </select>
+    </div>
+    <div class='flex-1 min-w-[150px]'>
+      <label for='filter-date' class='block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1'>Data</label>
+      <input id='filter-date' type='date' name='date' value='{{ request.GET.date }}'
+             class='block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-health-500 focus:outline-none focus:ring-2 focus:ring-health-400/40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100'>
+    </div>
+    <div class='flex gap-2'>
+      <button type='submit'
+              class='rounded-xl bg-navy-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-navy-800 focus:outline-none focus:ring-2 focus:ring-navy-700'>
+        Filtrar
+      </button>
+      <a href='{% url "scheduling:appointment_list" %}'
+         class='rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300'>
+        Limpar
+      </a>
+    </div>
+  </form>
+
+  <div class='mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/60'>
+    <div class='overflow-x-auto'>
+      <table class='min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800'>
+        <thead class='bg-slate-50 text-slate-600 dark:bg-slate-900 dark:text-slate-300'>
+          <tr>
+            <th class='px-4 py-3 font-medium'>Paciente</th>
+            <th class='px-4 py-3 font-medium'>Profissional</th>
+            <th class='px-4 py-3 font-medium'>Data</th>
+            <th class='px-4 py-3 font-medium'>Status</th>
+            <th class='px-4 py-3 font-medium'>Plano</th>
+            <th class='px-4 py-3 text-right font-medium'>Ações</th>
+          </tr>
+        </thead>
+        <tbody class='divide-y divide-slate-200 dark:divide-slate-800'>
+          {% for appointment in appointments %}
+            <tr class='text-slate-800 dark:text-slate-200'>
+              <td class='px-4 py-3'>
+                <span class='block font-medium'>{{ appointment.patient.full_name }}</span>
+                <span class='text-xs text-slate-400'>{{ appointment.patient_age }} anos</span>
+              </td>
+              <td class='px-4 py-3'>
+                <span class='block'>{{ appointment.professional.full_name }}</span>
+                <span class='text-xs text-slate-400'>{{ appointment.professional.specialty }}</span>
+              </td>
+              <td class='px-4 py-3 text-slate-500 dark:text-slate-400'>{{ appointment.scheduled_at|date:'d/m/Y H:i' }}</td>
+              <td class='px-4 py-3'>
+                {% if appointment.status == 'scheduled' %}
+                  <span class='inline-flex rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300'>Agendada</span>
+                {% elif appointment.status == 'confirmed' %}
+                  <span class='inline-flex rounded-full bg-health-100 px-2.5 py-0.5 text-xs font-medium text-health-700 dark:bg-health-950 dark:text-health-300'>Confirmada</span>
+                {% elif appointment.status == 'not_confirmed' %}
+                  <span class='inline-flex rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-950 dark:text-amber-300'>Não confirmada</span>
+                {% elif appointment.status == 'cancelled' %}
+                  <span class='inline-flex rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-medium text-rose-700 dark:bg-rose-950 dark:text-rose-300'>Cancelada</span>
+                {% else %}
+                  <span class='inline-flex rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400'>Concluída</span>
+                {% endif %}
+              </td>
+              <td class='px-4 py-3 text-slate-500 dark:text-slate-400'>{{ appointment.health_plan_used|default:'—' }}</td>
+              <td class='px-4 py-3 text-right'>
+                <a class='text-sm text-health-600 transition hover:text-health-500 dark:text-health-400 dark:hover:text-health-300'
+                   href='{% url "scheduling:appointment_update" appointment.pk %}'>Editar</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan='6' class='px-4 py-8 text-center text-sm text-slate-400'>
+                {% if request.GET %}
+                  Nenhuma consulta encontrada com os filtros aplicados.
+                {% else %}
+                  Nenhuma consulta agendada ainda.
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
+
+  {% if appointments.count > 0 %}
+    <p class='mt-3 text-xs text-slate-400'>{{ appointments.count }} consulta(s) encontrada(s).</p>
+  {% endif %}
 {% endblock %}

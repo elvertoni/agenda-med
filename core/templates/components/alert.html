@@ -1,21 +1,18 @@
-{% comment %}
-Banner de feedback. Cor da barra lateral varia conforme o nível.
-
-Args:
-  level: 'success' | 'error' | 'info' (default: 'info')
-  text:  texto da mensagem
-{% endcomment %}
 {% with level=level|default:'info' %}
   {% if level == 'success' %}
-    <div class='rounded-xl border border-slate-800 border-l-4 border-l-emerald-500 bg-slate-900 px-4 py-3 text-sm text-slate-200'>
+    <div role='alert' class='rounded-xl border border-health-200 border-l-4 border-l-health-500 bg-health-50 px-4 py-3 text-sm text-health-800 dark:border-health-700 dark:border-l-health-400 dark:bg-health-950/60 dark:text-health-200'>
       {{ text }}
     </div>
   {% elif level == 'error' %}
-    <div class='rounded-xl border border-slate-800 border-l-4 border-l-rose-500 bg-slate-900 px-4 py-3 text-sm text-slate-200'>
+    <div role='alert' class='rounded-xl border border-rose-200 border-l-4 border-l-rose-500 bg-rose-50 px-4 py-3 text-sm text-rose-800 dark:border-rose-800 dark:border-l-rose-400 dark:bg-rose-950/60 dark:text-rose-200'>
+      {{ text }}
+    </div>
+  {% elif level == 'warning' %}
+    <div role='alert' class='rounded-xl border border-amber-200 border-l-4 border-l-amber-500 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-800 dark:border-l-amber-400 dark:bg-amber-950/60 dark:text-amber-200'>
       {{ text }}
     </div>
   {% else %}
-    <div class='rounded-xl border border-slate-800 border-l-4 border-l-sky-500 bg-slate-900 px-4 py-3 text-sm text-slate-200'>
+    <div role='alert' class='rounded-xl border border-blue-200 border-l-4 border-l-blue-500 bg-blue-50 px-4 py-3 text-sm text-blue-800 dark:border-blue-800 dark:border-l-blue-400 dark:bg-blue-950/60 dark:text-blue-200'>
       {{ text }}
     </div>
   {% endif %}

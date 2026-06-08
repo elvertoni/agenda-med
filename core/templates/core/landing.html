@@ -3,114 +3,131 @@
 {% block title %}Agenda Clínica — Atendimento pelo WhatsApp{% endblock %}
 
 {% block content %}
-  <section class='overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 via-teal-500 to-sky-600 p-8 shadow-xl shadow-emerald-900/30 sm:p-12'>
+  {# ── Hero ─────────────────────────────────────────────────────── #}
+  <section class='overflow-hidden rounded-2xl bg-brand-gradient p-8 shadow-navy-lg sm:p-12 lg:p-16'>
     <div class='max-w-3xl'>
-      <p class='text-xs uppercase tracking-wide text-slate-950'>Agenda Clínica</p>
-      <h1 class='mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl md:text-5xl'>
-        Atendimento integrado para consultas, exames e orientação ao paciente
+      <p class='text-xs font-medium uppercase tracking-widest text-blue-200'>Agenda Clínica</p>
+      <h1 class='font-display mt-3 text-3xl font-normal leading-snug text-white sm:text-4xl md:text-5xl'>
+        Agendamento e atendimento integrado pelo WhatsApp
       </h1>
-      <p class='mt-4 text-base leading-relaxed text-slate-900/80 sm:text-lg'>
-        Encontre profissionais ativos, valores de atendimento e protocolos públicos da clínica em uma experiência simples, responsiva e preparada para o atendimento pelo WhatsApp.
+      <p class='mt-4 text-base leading-relaxed text-blue-100 sm:text-lg'>
+        Encontre profissionais, consulte horários, preços e protocolos. O canal primário é o WhatsApp — rápido, familiar e sempre disponível.
       </p>
       <div class='mt-8 flex flex-wrap items-center gap-3'>
         <a href='{% url "messaging:otp_request" %}'
-           class='inline-flex items-center justify-center rounded-xl bg-slate-950 px-5 py-3 text-sm font-medium text-emerald-400 shadow-lg shadow-black/20 transition hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 focus:ring-offset-emerald-500'>
+           class='inline-flex items-center justify-center rounded-xl bg-health-500 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-health-900/30 transition hover:bg-health-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-navy-900'>
           Acesso do paciente
         </a>
         <a href='{% url "accounts:login" %}'
-           class='inline-flex items-center justify-center rounded-xl border border-slate-950/30 bg-white/10 px-5 py-3 text-sm font-medium text-slate-950 backdrop-blur transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 focus:ring-offset-emerald-500'>
+           class='inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-medium text-white backdrop-blur transition hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-navy-900'>
           Login da equipe
         </a>
       </div>
     </div>
 
-    <div class='mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-      <div class='rounded-2xl border border-slate-950/30 bg-white/10 p-6 backdrop-blur'>
-        <p class='text-2xl font-semibold text-slate-950'>{{ professional_count }}</p>
-        <p class='mt-1 text-sm text-slate-900/80'>profissionais ativos</p>
+    <div class='mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3'>
+      <div class='rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur'>
+        <p class='text-2xl font-semibold text-white'>{{ professional_count }}</p>
+        <p class='mt-1 text-sm text-blue-200'>profissionais ativos</p>
       </div>
-      <div class='rounded-2xl border border-slate-950/30 bg-white/10 p-6 backdrop-blur'>
-        <p class='text-2xl font-semibold text-slate-950'>{{ price_count }}</p>
-        <p class='mt-1 text-sm text-slate-900/80'>preços publicados</p>
+      <div class='rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur'>
+        <p class='text-2xl font-semibold text-white'>{{ price_count }}</p>
+        <p class='mt-1 text-sm text-blue-200'>preços publicados</p>
       </div>
-      <div class='rounded-2xl border border-slate-950/30 bg-white/10 p-6 backdrop-blur'>
-        <p class='text-2xl font-semibold text-slate-950'>{{ service_protocol_count|add:exam_protocol_count }}</p>
-        <p class='mt-1 text-sm text-slate-900/80'>protocolos disponíveis</p>
+      <div class='rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur'>
+        <p class='text-2xl font-semibold text-white'>{{ service_protocol_count|add:exam_protocol_count }}</p>
+        <p class='mt-1 text-sm text-blue-200'>protocolos disponíveis</p>
       </div>
     </div>
   </section>
 
-  <section class='mt-10'>
-    <div class='flex flex-wrap items-center justify-between gap-3'>
+  {# ── Profissionais ─────────────────────────────────────────────── #}
+  <section class='mt-12'>
+    <div class='flex flex-wrap items-end justify-between gap-4'>
       <div>
-        <h2 class='text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl'>Profissionais em atendimento</h2>
-        <p class='mt-2 text-sm text-slate-400'>Conheça a equipe ativa e suas especialidades.</p>
+        <p class='text-xs font-medium uppercase tracking-widest text-health-600 dark:text-health-400'>Equipe clínica</p>
+        <h2 class='font-display mt-1 text-2xl font-normal text-slate-900 dark:text-slate-100 md:text-3xl'>
+          Profissionais em atendimento
+        </h2>
+        <p class='mt-2 text-sm text-slate-500 dark:text-slate-400'>Conheça a equipe ativa e suas especialidades.</p>
       </div>
       <a href='{% url "public_professionals" %}'
-         class='inline-flex items-center justify-center rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400'>
-        Ver equipe
+         class='inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-health-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800'>
+        Ver equipe completa
       </a>
     </div>
 
-    <div class='mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+    <div class='mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3'>
       {% for professional in featured_professionals %}
-        <article class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur'>
-          <p class='text-xs uppercase tracking-wide text-slate-500'>{{ professional.specialty.name }}</p>
-          <h3 class='mt-1 text-lg font-semibold text-slate-100'>{{ professional.full_name }}</h3>
-          <p class='mt-2 text-sm text-slate-400'>Registro {{ professional.registration_number }}</p>
+        <article class='rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-health-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-health-700'>
+          <p class='text-xs font-medium uppercase tracking-wider text-health-600 dark:text-health-400'>{{ professional.specialty.name }}</p>
+          <h3 class='font-display mt-1 text-lg font-normal text-slate-900 dark:text-slate-100'>{{ professional.full_name }}</h3>
+          <p class='mt-1 text-xs text-slate-400'>Registro {{ professional.registration_number }}</p>
           {% if professional.bio %}
-            <p class='mt-4 text-sm leading-relaxed text-slate-300'>{{ professional.bio|truncatechars:140 }}</p>
+            <p class='mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400'>{{ professional.bio|truncatechars:140 }}</p>
           {% endif %}
         </article>
       {% empty %}
-        <div class='col-span-full rounded-2xl border border-slate-800 bg-slate-900/60 p-6 text-center text-sm text-slate-400'>
-          Em breve a equipe ativa aparecerá aqui.
+        <div class='col-span-full rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-400 dark:border-slate-700'>
+          A equipe ativa aparecerá aqui após o cadastro.
         </div>
       {% endfor %}
     </div>
   </section>
 
-  <section class='mt-10'>
-    <h2 class='text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl'>Informações públicas</h2>
-    <p class='mt-2 text-sm text-slate-400'>Preços, orientações de atendimento e preparo para exames publicados pela clínica.</p>
+  {# ── Informações públicas ───────────────────────────────────────── #}
+  <section class='mt-12'>
+    <div>
+      <p class='text-xs font-medium uppercase tracking-widest text-health-600 dark:text-health-400'>Transparência</p>
+      <h2 class='font-display mt-1 text-2xl font-normal text-slate-900 dark:text-slate-100 md:text-3xl'>
+        Informações públicas
+      </h2>
+      <p class='mt-2 text-sm text-slate-500 dark:text-slate-400'>Preços, orientações de atendimento e preparo para exames publicados pela clínica.</p>
+    </div>
 
-    <div class='mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+    <div class='mt-6 grid grid-cols-1 gap-5 sm:grid-cols-3'>
       <a href='{% url "clinic_content_public:public_prices" %}'
-         class='group rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur transition hover:border-emerald-500/60 hover:bg-slate-900'>
-        <p class='text-xs uppercase tracking-wide text-slate-500'>Transparência</p>
-        <h3 class='mt-1 text-lg font-semibold text-slate-100 group-hover:text-emerald-400'>Preços e procedimentos</h3>
-        {% for item in featured_prices %}
-          {% if forloop.first %}
-            <p class='mt-2 text-sm text-slate-400'>{{ item.name }} · R$ {{ item.price }}</p>
-          {% endif %}
-        {% empty %}
-          <p class='mt-2 text-sm text-slate-400'>Valores serão publicados pela equipe da clínica.</p>
+         class='group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-health-400 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-health-600'>
+        <div class='flex h-10 w-10 items-center justify-center rounded-xl bg-health-100 text-health-700 group-hover:bg-health-200 dark:bg-health-950 dark:text-health-300 dark:group-hover:bg-health-900'>
+          <svg class='h-5 w-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'>
+            <path stroke-linecap='round' stroke-linejoin='round' d='M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'/>
+          </svg>
+        </div>
+        <h3 class='mt-4 font-medium text-slate-900 group-hover:text-health-700 dark:text-slate-100 dark:group-hover:text-health-400'>Preços e procedimentos</h3>
+        {% for item in featured_prices %}{% if forloop.first %}
+          <p class='mt-1 text-sm text-slate-500 dark:text-slate-400'>{{ item.name }} · R$ {{ item.price }}</p>
+        {% endif %}{% empty %}
+          <p class='mt-1 text-sm text-slate-400'>Valores serão publicados pela equipe.</p>
         {% endfor %}
       </a>
 
       <a href='{% url "clinic_content_public:public_service_protocols" %}'
-         class='group rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur transition hover:border-emerald-500/60 hover:bg-slate-900'>
-        <p class='text-xs uppercase tracking-wide text-slate-500'>Atendimento</p>
-        <h3 class='mt-1 text-lg font-semibold text-slate-100 group-hover:text-emerald-400'>Protocolos de atendimento</h3>
-        {% for protocol in featured_service_protocols %}
-          {% if forloop.first %}
-            <p class='mt-2 text-sm text-slate-400'>{{ protocol.title }}</p>
-          {% endif %}
-        {% empty %}
-          <p class='mt-2 text-sm text-slate-400'>Orientações gerais serão exibidas quando publicadas.</p>
+         class='group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-health-400 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-health-600'>
+        <div class='flex h-10 w-10 items-center justify-center rounded-xl bg-health-100 text-health-700 group-hover:bg-health-200 dark:bg-health-950 dark:text-health-300 dark:group-hover:bg-health-900'>
+          <svg class='h-5 w-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'>
+            <path stroke-linecap='round' stroke-linejoin='round' d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'/>
+          </svg>
+        </div>
+        <h3 class='mt-4 font-medium text-slate-900 group-hover:text-health-700 dark:text-slate-100 dark:group-hover:text-health-400'>Protocolos de atendimento</h3>
+        {% for protocol in featured_service_protocols %}{% if forloop.first %}
+          <p class='mt-1 text-sm text-slate-500 dark:text-slate-400'>{{ protocol.title }}</p>
+        {% endif %}{% empty %}
+          <p class='mt-1 text-sm text-slate-400'>Orientações serão exibidas quando publicadas.</p>
         {% endfor %}
       </a>
 
       <a href='{% url "clinic_content_public:public_exam_protocols" %}'
-         class='group rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur transition hover:border-emerald-500/60 hover:bg-slate-900'>
-        <p class='text-xs uppercase tracking-wide text-slate-500'>Preparo</p>
-        <h3 class='mt-1 text-lg font-semibold text-slate-100 group-hover:text-emerald-400'>Protocolos de exames</h3>
-        {% for protocol in featured_exam_protocols %}
-          {% if forloop.first %}
-            <p class='mt-2 text-sm text-slate-400'>{{ protocol.exam_name }}</p>
-          {% endif %}
-        {% empty %}
-          <p class='mt-2 text-sm text-slate-400'>Instruções de preparo serão exibidas quando publicadas.</p>
+         class='group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-health-400 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-health-600'>
+        <div class='flex h-10 w-10 items-center justify-center rounded-xl bg-health-100 text-health-700 group-hover:bg-health-200 dark:bg-health-950 dark:text-health-300 dark:group-hover:bg-health-900'>
+          <svg class='h-5 w-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'>
+            <path stroke-linecap='round' stroke-linejoin='round' d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'/>
+          </svg>
+        </div>
+        <h3 class='mt-4 font-medium text-slate-900 group-hover:text-health-700 dark:text-slate-100 dark:group-hover:text-health-400'>Protocolos de exames</h3>
+        {% for protocol in featured_exam_protocols %}{% if forloop.first %}
+          <p class='mt-1 text-sm text-slate-500 dark:text-slate-400'>{{ protocol.exam_name }}</p>
+        {% endif %}{% empty %}
+          <p class='mt-1 text-sm text-slate-400'>Instruções de preparo serão exibidas quando publicadas.</p>
         {% endfor %}
       </a>
     </div>

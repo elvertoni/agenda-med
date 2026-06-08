@@ -3,222 +3,231 @@
 {% block title %}Painel — Agenda Clínica{% endblock %}
 
 {% block dashboard_content %}
-  <div class='flex items-start justify-between gap-4'>
+  <div class='flex flex-wrap items-start justify-between gap-4'>
     <div>
-      <h1 class='text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl'>Dashboard administrativo</h1>
-      <p class='mt-2 text-sm text-slate-400'>Bem-vindo, {{ user.get_full_name }}.</p>
+      <p class='text-xs font-medium uppercase tracking-wider text-health-600 dark:text-health-400'>Painel administrativo</p>
+      <h1 class='font-display mt-1 text-2xl font-normal text-slate-900 dark:text-slate-100 md:text-3xl'>
+        Bem-vindo, {{ user.get_full_name }}.
+      </h1>
     </div>
     <a href='{% url "professionals:professional_create" %}'
-       class='inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-medium text-slate-950 shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400'>
-      Novo profissional
+       class='inline-flex items-center justify-center rounded-xl bg-health-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-health-500 focus:outline-none focus:ring-2 focus:ring-health-500'>
+      + Novo profissional
     </a>
   </div>
 
-  <div class='mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+  {# ── KPI Cards ────────────────────────────────────────── #}
+  <div class='mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3'>
     {% for card in dashboard_cards %}
       {% if card.url %}
         <a href='{{ card.url }}'
-           class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur transition hover:border-emerald-500/40 focus:outline-none focus:ring-2 focus:ring-emerald-400/40'>
-          <p class='text-xs font-medium uppercase tracking-wider text-slate-400'>{{ card.label }}</p>
-          <p class='mt-2 text-3xl font-semibold text-slate-100'>{{ card.value }}</p>
-          <p class='mt-2 text-sm text-slate-400'>{{ card.description }}</p>
-          <p class='mt-4 text-sm text-emerald-400'>Abrir visão -></p>
+           class='group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-health-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-health-700 focus:outline-none focus:ring-2 focus:ring-health-500'>
+          <p class='text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400'>{{ card.label }}</p>
+          <p class='mt-2 text-3xl font-semibold text-slate-900 dark:text-slate-100'>{{ card.value }}</p>
+          <p class='mt-1 text-sm text-slate-500 dark:text-slate-400'>{{ card.description }}</p>
+          <p class='mt-3 text-xs font-medium text-health-600 group-hover:text-health-500 dark:text-health-400'>Ver detalhes →</p>
         </a>
       {% else %}
-        <div class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur'>
-          <div class='flex items-start justify-between gap-4'>
-            <p class='text-xs font-medium uppercase tracking-wider text-slate-400'>{{ card.label }}</p>
-            <span class='rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400'>{{ card.status }}</span>
+        <div class='rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60'>
+          <div class='flex items-start justify-between gap-2'>
+            <p class='text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400'>{{ card.label }}</p>
+            <span class='rounded-full bg-health-100 px-2 py-0.5 text-xs font-medium text-health-700 dark:bg-health-950 dark:text-health-300'>{{ card.status }}</span>
           </div>
-          <p class='mt-2 text-3xl font-semibold text-slate-100'>{{ card.value }}</p>
-          <p class='mt-2 text-sm text-slate-400'>{{ card.description }}</p>
-          <p class='mt-4 text-sm text-sky-400'>Visão estrutural</p>
+          <p class='mt-2 text-3xl font-semibold text-slate-900 dark:text-slate-100'>{{ card.value }}</p>
+          <p class='mt-1 text-sm text-slate-500 dark:text-slate-400'>{{ card.description }}</p>
         </div>
       {% endif %}
     {% endfor %}
   </div>
 
+  {# ── Confirmações de presença ─────────────────────────── #}
   <section class='mt-8'>
-    <div class='flex items-center justify-between gap-4'>
+    <div class='mb-4 flex flex-wrap items-center justify-between gap-3'>
       <div>
-        <h2 class='text-lg font-semibold text-slate-100'>Consultas</h2>
-        <p class='mt-2 text-sm text-slate-400'>Acompanhamento operacional das confirmações de presença vinculadas às consultas.</p>
+        <h2 class='text-lg font-semibold text-slate-900 dark:text-slate-100'>Confirmações de presença</h2>
+        <p class='mt-0.5 text-sm text-slate-500 dark:text-slate-400'>Acompanhe as confirmações das próximas consultas.</p>
       </div>
       {% if presence_confirmation_available %}
-        <span class='rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400'>Confirmações ativas</span>
-      {% else %}
-        <span class='rounded-full border border-slate-800 px-2.5 py-0.5 text-xs font-medium text-slate-400'>Aguardando módulo</span>
+        <span class='rounded-full border border-health-200 bg-health-50 px-3 py-0.5 text-xs font-medium text-health-700 dark:border-health-800 dark:bg-health-950 dark:text-health-300'>Confirmações ativas</span>
       {% endif %}
     </div>
 
-    <div class='mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4'>
+    <div class='grid grid-cols-2 gap-3 sm:grid-cols-4'>
       {% for card in appointment_view_cards %}
-        <div class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur'>
+        <div class='rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900/60'>
           <p class='text-xs font-medium uppercase tracking-wider text-slate-400'>{{ card.label }}</p>
-          <p class='mt-2 text-3xl font-semibold text-slate-100'>{{ card.value }}</p>
-          <p class='mt-2 text-sm text-slate-400'>{{ card.description }}</p>
+          <p class='mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100'>{{ card.value }}</p>
+          <p class='mt-1 text-xs text-slate-500 dark:text-slate-400'>{{ card.description }}</p>
         </div>
       {% endfor %}
     </div>
 
-    <div class='mt-6 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur'>
-      <table class='min-w-full divide-y divide-slate-800 text-left text-sm'>
-        <thead class='bg-slate-900 text-slate-300'>
-          <tr>
-            <th class='px-4 py-3 font-medium'>Paciente</th>
-            <th class='px-4 py-3 font-medium'>Profissional</th>
-            <th class='px-4 py-3 font-medium'>Consulta</th>
-            <th class='px-4 py-3 font-medium'>Envio</th>
-            <th class='px-4 py-3 font-medium'>Resposta</th>
-          </tr>
-        </thead>
-        <tbody class='divide-y divide-slate-800 text-slate-200'>
-          {% for confirmation in recent_presence_confirmations %}
+    <div class='mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/60'>
+      <div class='overflow-x-auto'>
+        <table class='min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800'>
+          <thead class='bg-slate-50 text-slate-600 dark:bg-slate-900 dark:text-slate-300'>
             <tr>
-              <td class='px-4 py-3'>{{ confirmation.appointment.patient.full_name }}</td>
-              <td class='px-4 py-3 text-slate-400'>{{ confirmation.appointment.professional.full_name }}</td>
-              <td class='px-4 py-3 text-slate-400'>{{ confirmation.appointment.scheduled_at|date:'d/m/Y H:i' }}</td>
-              <td class='px-4 py-3'>
-                {% if confirmation.status == 'pending' %}
-                  <span class='inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-300'>Pendente</span>
-                {% elif confirmation.status == 'sent' %}
-                  <span class='inline-flex items-center rounded-full bg-sky-500/10 px-2.5 py-0.5 text-xs font-medium text-sky-300'>Enviada</span>
-                {% elif confirmation.status == 'responded' %}
-                  <span class='inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400'>Respondida</span>
-                {% else %}
-                  <span class='inline-flex items-center rounded-full bg-rose-500/10 px-2.5 py-0.5 text-xs font-medium text-rose-300'>{{ confirmation.get_status_display }}</span>
-                {% endif %}
-              </td>
-              <td class='px-4 py-3'>
-                {% if confirmation.response == 'confirmed' %}
-                  <span class='inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400'>Confirmado</span>
-                {% elif confirmation.response == 'not_confirmed' %}
-                  <span class='inline-flex items-center rounded-full bg-rose-500/10 px-2.5 py-0.5 text-xs font-medium text-rose-300'>Não confirmado</span>
-                {% else %}
-                  <span class='inline-flex items-center rounded-full bg-slate-800 px-2.5 py-0.5 text-xs font-medium text-slate-400'>Sem resposta</span>
-                {% endif %}
-              </td>
+              <th class='px-4 py-3 font-medium'>Paciente</th>
+              <th class='px-4 py-3 font-medium'>Profissional</th>
+              <th class='px-4 py-3 font-medium'>Consulta</th>
+              <th class='px-4 py-3 font-medium'>Envio</th>
+              <th class='px-4 py-3 font-medium'>Resposta</th>
             </tr>
-          {% empty %}
-            <tr>
-              <td colspan='5' class='px-4 py-6 text-center text-sm text-slate-400'>Nenhuma confirmação de presença encontrada.</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody class='divide-y divide-slate-200 dark:divide-slate-800'>
+            {% for confirmation in recent_presence_confirmations %}
+              <tr class='text-slate-800 dark:text-slate-200'>
+                <td class='px-4 py-3'>{{ confirmation.appointment.patient.full_name }}</td>
+                <td class='px-4 py-3 text-slate-500 dark:text-slate-400'>{{ confirmation.appointment.professional.full_name }}</td>
+                <td class='px-4 py-3 text-slate-500 dark:text-slate-400'>{{ confirmation.appointment.scheduled_at|date:'d/m/Y H:i' }}</td>
+                <td class='px-4 py-3'>
+                  {% if confirmation.status == 'pending' %}
+                    <span class='inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-950 dark:text-amber-300'>Pendente</span>
+                  {% elif confirmation.status == 'sent' %}
+                    <span class='inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300'>Enviada</span>
+                  {% elif confirmation.status == 'responded' %}
+                    <span class='inline-flex rounded-full bg-health-100 px-2 py-0.5 text-xs font-medium text-health-700 dark:bg-health-950 dark:text-health-300'>Respondida</span>
+                  {% else %}
+                    <span class='inline-flex rounded-full bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-700 dark:bg-rose-950 dark:text-rose-300'>{{ confirmation.get_status_display }}</span>
+                  {% endif %}
+                </td>
+                <td class='px-4 py-3'>
+                  {% if confirmation.response == 'confirmed' %}
+                    <span class='inline-flex rounded-full bg-health-100 px-2 py-0.5 text-xs font-medium text-health-700 dark:bg-health-950 dark:text-health-300'>Confirmado</span>
+                  {% elif confirmation.response == 'not_confirmed' %}
+                    <span class='inline-flex rounded-full bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-700 dark:bg-rose-950 dark:text-rose-300'>Não confirmado</span>
+                  {% else %}
+                    <span class='inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400'>Sem resposta</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan='5' class='px-4 py-6 text-center text-sm text-slate-400'>Nenhuma confirmação de presença encontrada.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
+  {# ── Profissionais ────────────────────────────────────── #}
   <section class='mt-8'>
-    <div class='flex items-center justify-between gap-4'>
+    <div class='mb-4 flex flex-wrap items-center justify-between gap-3'>
       <div>
-        <h2 class='text-lg font-semibold text-slate-100'>Profissionais</h2>
-        <p class='mt-2 text-sm text-slate-400'>Visão de equipe, especialidades e pacientes.</p>
+        <h2 class='text-lg font-semibold text-slate-900 dark:text-slate-100'>Profissionais</h2>
+        <p class='mt-0.5 text-sm text-slate-500 dark:text-slate-400'>Visão da equipe, especialidades e cadastros.</p>
       </div>
       <a href='{% url "professionals:professional_list" %}'
-         class='rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400'>
+         class='rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800'>
         Gerenciar
       </a>
     </div>
 
-    <div class='mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+    <div class='grid grid-cols-1 gap-4 sm:grid-cols-3'>
       {% for card in professional_view_cards %}
         <a href='{{ card.url }}'
-           class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur transition hover:border-emerald-500/40 focus:outline-none focus:ring-2 focus:ring-emerald-400/40'>
+           class='group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-health-300 dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-health-700 focus:outline-none focus:ring-2 focus:ring-health-500'>
           <p class='text-xs font-medium uppercase tracking-wider text-slate-400'>{{ card.label }}</p>
-          <p class='mt-2 text-3xl font-semibold text-slate-100'>{{ card.value }}</p>
-          <p class='mt-2 text-sm text-slate-400'>{{ card.description }}</p>
+          <p class='mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100'>{{ card.value }}</p>
+          <p class='mt-1 text-sm text-slate-500 dark:text-slate-400'>{{ card.description }}</p>
         </a>
       {% endfor %}
     </div>
 
-    <div class='mt-6 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur'>
-      <table class='min-w-full divide-y divide-slate-800 text-left text-sm'>
-        <thead class='bg-slate-900 text-slate-300'>
-          <tr>
-            <th class='px-4 py-3 font-medium'>Profissional</th>
-            <th class='px-4 py-3 font-medium'>Especialidade</th>
-            <th class='px-4 py-3 font-medium'>Atualizado em</th>
-            <th class='px-4 py-3 text-right font-medium'>Ação</th>
-          </tr>
-        </thead>
-        <tbody class='divide-y divide-slate-800 text-slate-200'>
-          {% for professional in recent_professionals %}
+    <div class='mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/60'>
+      <div class='overflow-x-auto'>
+        <table class='min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800'>
+          <thead class='bg-slate-50 text-slate-600 dark:bg-slate-900 dark:text-slate-300'>
             <tr>
-              <td class='px-4 py-3'>{{ professional.full_name }}</td>
-              <td class='px-4 py-3 text-slate-400'>{{ professional.specialty }}</td>
-              <td class='px-4 py-3 text-slate-400'>{{ professional.updated_at|date:'d/m/Y H:i' }}</td>
-              <td class='px-4 py-3 text-right'>
-                <a class='text-sm text-sky-400 hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-400'
-                   href='{% url "professionals:professional_update" professional.pk %}'>Editar</a>
-              </td>
+              <th class='px-4 py-3 font-medium'>Profissional</th>
+              <th class='px-4 py-3 font-medium'>Especialidade</th>
+              <th class='px-4 py-3 font-medium'>Atualizado em</th>
+              <th class='px-4 py-3 text-right font-medium'>Ação</th>
             </tr>
-          {% empty %}
-            <tr>
-              <td colspan='4' class='px-4 py-6 text-center text-sm text-slate-400'>Nenhum profissional ativo cadastrado ainda.</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody class='divide-y divide-slate-200 dark:divide-slate-800'>
+            {% for professional in recent_professionals %}
+              <tr class='text-slate-800 dark:text-slate-200'>
+                <td class='px-4 py-3'>{{ professional.full_name }}</td>
+                <td class='px-4 py-3 text-slate-500 dark:text-slate-400'>{{ professional.specialty }}</td>
+                <td class='px-4 py-3 text-slate-500 dark:text-slate-400'>{{ professional.updated_at|date:'d/m/Y H:i' }}</td>
+                <td class='px-4 py-3 text-right'>
+                  <a class='text-sm text-health-600 transition hover:text-health-500 dark:text-health-400 dark:hover:text-health-300'
+                     href='{% url "professionals:professional_update" professional.pk %}'>Editar</a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan='4' class='px-4 py-6 text-center text-sm text-slate-400'>Nenhum profissional ativo cadastrado ainda.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
+  {# ── Conteúdo ─────────────────────────────────────────── #}
   <section class='mt-8'>
-    <div class='flex items-center justify-between gap-4'>
+    <div class='mb-4 flex flex-wrap items-center justify-between gap-3'>
       <div>
-        <h2 class='text-lg font-semibold text-slate-100'>Conteúdo</h2>
-        <p class='mt-2 text-sm text-slate-400'>Visão de preços e protocolos publicados.</p>
+        <h2 class='text-lg font-semibold text-slate-900 dark:text-slate-100'>Conteúdo informativo</h2>
+        <p class='mt-0.5 text-sm text-slate-500 dark:text-slate-400'>Preços e protocolos publicados para pacientes.</p>
       </div>
       <a href='{% url "clinic_content:price_list" %}'
-         class='rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400'>
+         class='rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800'>
         Gerenciar
       </a>
     </div>
 
-    <div class='mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+    <div class='grid grid-cols-1 gap-4 sm:grid-cols-3'>
       {% for card in content_view_cards %}
         <a href='{{ card.url }}'
-           class='rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/20 backdrop-blur transition hover:border-emerald-500/40 focus:outline-none focus:ring-2 focus:ring-emerald-400/40'>
+           class='group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-health-300 dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-health-700 focus:outline-none focus:ring-2 focus:ring-health-500'>
           <p class='text-xs font-medium uppercase tracking-wider text-slate-400'>{{ card.label }}</p>
-          <p class='mt-2 text-3xl font-semibold text-slate-100'>{{ card.value }}</p>
-          <p class='mt-2 text-sm text-slate-400'>{{ card.description }}</p>
+          <p class='mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100'>{{ card.value }}</p>
+          <p class='mt-1 text-sm text-slate-500 dark:text-slate-400'>{{ card.description }}</p>
         </a>
       {% endfor %}
     </div>
 
-    <div class='mt-6 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur'>
-      <table class='min-w-full divide-y divide-slate-800 text-left text-sm'>
-        <thead class='bg-slate-900 text-slate-300'>
-          <tr>
-            <th class='px-4 py-3 font-medium'>Item</th>
-            <th class='px-4 py-3 font-medium'>Tipo</th>
-            <th class='px-4 py-3 font-medium'>Status</th>
-            <th class='px-4 py-3 text-right font-medium'>Atualizado em</th>
-          </tr>
-        </thead>
-        <tbody class='divide-y divide-slate-800 text-slate-200'>
-          {% for item in recent_content_updates %}
+    <div class='mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/60'>
+      <div class='overflow-x-auto'>
+        <table class='min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800'>
+          <thead class='bg-slate-50 text-slate-600 dark:bg-slate-900 dark:text-slate-300'>
             <tr>
-              <td class='px-4 py-3'>
-                <a href='{{ item.url }}' class='text-sky-400 hover:text-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-400'>{{ item.title }}</a>
-              </td>
-              <td class='px-4 py-3 text-slate-400'>{{ item.type }}</td>
-              <td class='px-4 py-3'>
-                {% if item.status == 'Ativo' %}
-                  <span class='inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400'>Ativo</span>
-                {% else %}
-                  <span class='inline-flex items-center rounded-full bg-slate-800 px-2.5 py-0.5 text-xs font-medium text-slate-400'>Inativo</span>
-                {% endif %}
-              </td>
-              <td class='px-4 py-3 text-right text-slate-400'>{{ item.updated_at|date:'d/m/Y H:i' }}</td>
+              <th class='px-4 py-3 font-medium'>Item</th>
+              <th class='px-4 py-3 font-medium'>Tipo</th>
+              <th class='px-4 py-3 font-medium'>Status</th>
+              <th class='px-4 py-3 text-right font-medium'>Atualizado em</th>
             </tr>
-          {% empty %}
-            <tr>
-              <td colspan='4' class='px-4 py-6 text-center text-sm text-slate-400'>Nenhum conteúdo cadastrado ainda.</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody class='divide-y divide-slate-200 dark:divide-slate-800'>
+            {% for item in recent_content_updates %}
+              <tr class='text-slate-800 dark:text-slate-200'>
+                <td class='px-4 py-3'>
+                  <a href='{{ item.url }}' class='text-health-600 transition hover:text-health-500 dark:text-health-400 dark:hover:text-health-300'>{{ item.title }}</a>
+                </td>
+                <td class='px-4 py-3 text-slate-500 dark:text-slate-400'>{{ item.type }}</td>
+                <td class='px-4 py-3'>
+                  {% if item.status == 'Ativo' %}
+                    <span class='inline-flex rounded-full bg-health-100 px-2 py-0.5 text-xs font-medium text-health-700 dark:bg-health-950 dark:text-health-300'>Ativo</span>
+                  {% else %}
+                    <span class='inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400'>Inativo</span>
+                  {% endif %}
+                </td>
+                <td class='px-4 py-3 text-right text-slate-500 dark:text-slate-400'>{{ item.updated_at|date:'d/m/Y H:i' }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan='4' class='px-4 py-6 text-center text-sm text-slate-400'>Nenhum conteúdo cadastrado ainda.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 {% endblock %}

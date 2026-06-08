@@ -3,42 +3,53 @@
 {% block title %}Especialidades — Agenda Clínica{% endblock %}
 
 {% block dashboard_content %}
-  <div class='flex items-center justify-between'>
-    <h1 class='text-2xl font-semibold tracking-tight text-slate-100 md:text-3xl'>Especialidades</h1>
+  <div class='flex flex-wrap items-center justify-between gap-4'>
+    <div>
+      <p class='text-xs font-medium uppercase tracking-wider text-health-600 dark:text-health-400'>Categorias clínicas</p>
+      <h1 class='font-display mt-1 text-2xl font-normal text-slate-900 dark:text-slate-100'>Especialidades</h1>
+    </div>
     <a href='{% url "professionals:specialty_create" %}'
-       class='inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-medium text-slate-950 shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-400'>
-      Nova especialidade
+       class='inline-flex items-center justify-center rounded-xl bg-health-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-health-500 focus:outline-none focus:ring-2 focus:ring-health-500'>
+      + Nova especialidade
     </a>
   </div>
 
-  <div class='mt-6 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur'>
-    <table class='min-w-full divide-y divide-slate-800 text-left text-sm'>
-      <thead class='bg-slate-900 text-slate-300'>
-        <tr>
-          <th class='px-4 py-3 font-medium'>Nome</th>
-          <th class='px-4 py-3 font-medium'>Descrição</th>
-          <th class='px-4 py-3 text-right font-medium'>Ações</th>
-        </tr>
-      </thead>
-      <tbody class='divide-y divide-slate-800 text-slate-200'>
-        {% for specialty in specialties %}
+  <div class='mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/60'>
+    <div class='overflow-x-auto'>
+      <table class='min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800'>
+        <thead class='bg-slate-50 text-slate-600 dark:bg-slate-900 dark:text-slate-300'>
           <tr>
-            <td class='px-4 py-3'>{{ specialty.name }}</td>
-            <td class='px-4 py-3 text-slate-400'>{{ specialty.description|truncatechars:80 }}</td>
-            <td class='px-4 py-3 text-right'>
-              <a class='text-sm text-sky-400 hover:text-sky-300' href='{% url "professionals:specialty_update" specialty.pk %}'>Editar</a>
-              <span class='px-1 text-slate-700'>·</span>
-              <a class='text-sm text-rose-400 hover:text-rose-300' href='{% url "professionals:specialty_delete" specialty.pk %}'>Excluir</a>
-            </td>
+            <th class='px-4 py-3 font-medium'>Nome</th>
+            <th class='px-4 py-3 font-medium'>Descrição</th>
+            <th class='px-4 py-3 text-right font-medium'>Ações</th>
           </tr>
-        {% empty %}
-          <tr><td colspan='3' class='px-4 py-6 text-center text-sm text-slate-400'>Nenhuma especialidade cadastrada ainda.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody class='divide-y divide-slate-200 dark:divide-slate-800'>
+          {% for specialty in specialties %}
+            <tr class='text-slate-800 dark:text-slate-200'>
+              <td class='px-4 py-3 font-medium'>{{ specialty.name }}</td>
+              <td class='px-4 py-3 text-slate-500 dark:text-slate-400'>{{ specialty.description|truncatechars:80 }}</td>
+              <td class='px-4 py-3 text-right'>
+                <a class='text-sm text-health-600 transition hover:text-health-500 dark:text-health-400'
+                   href='{% url "professionals:specialty_update" specialty.pk %}'>Editar</a>
+                <span class='px-1 text-slate-300 dark:text-slate-700'>·</span>
+                <a class='text-sm text-rose-600 transition hover:text-rose-500 dark:text-rose-400'
+                   href='{% url "professionals:specialty_delete" specialty.pk %}'>Excluir</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan='3' class='px-4 py-8 text-center text-sm text-slate-400'>Nenhuma especialidade cadastrada ainda.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <p class='mt-4 text-sm text-slate-400'>
-    <a href='{% url "professionals:professional_list" %}' class='text-sky-400 hover:text-sky-300'>← Voltar para profissionais</a>
+  <p class='mt-4 text-sm'>
+    <a href='{% url "professionals:professional_list" %}' class='text-health-600 transition hover:text-health-500 dark:text-health-400'>
+      ← Voltar para profissionais
+    </a>
   </p>
 {% endblock %}

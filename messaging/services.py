@@ -19,15 +19,15 @@ def normalize_whatsapp_number(value):
     return re.sub(r'\D', '', value or '')
 
 
-def find_patient_by_whatsapp(whatsapp_number):
-    normalized_number = normalize_whatsapp_number(whatsapp_number)
-    if not normalized_number:
+def find_patient_by_whatsapp(whatsapp_number: str) -> 'PatientProfile | None':
+    normalized = normalize_whatsapp_number(whatsapp_number)
+    if not normalized:
         return None
-
-    for patient in PatientProfile.objects.select_related('user'):
-        if normalize_whatsapp_number(patient.whatsapp_number) == normalized_number:
-            return patient
-    return None
+    return (
+        PatientProfile.objects.filter(whatsapp_number=normalized)
+        .select_related('user')
+        .first()
+    )
 
 
 def generate_otp_code():

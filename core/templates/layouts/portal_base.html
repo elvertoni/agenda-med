@@ -4,19 +4,18 @@
 {% url "portal_home" as portal_home_url %}
 {% url "portal_appointments" as portal_appointments_url %}
 {% url "portal_availability" as portal_availability_url %}
-<nav class='sticky top-0 z-40 border-b border-slate-800 bg-slate-950/80 backdrop-blur'>
-  <div class='mx-auto flex max-w-6xl flex-col justify-between gap-3 px-4 py-3 sm:flex-row sm:items-center sm:px-6 lg:px-8'>
-    <a href='{{ portal_home_url|default:"#"}}' class='bg-gradient-to-r from-emerald-400 to-sky-400 bg-clip-text text-lg font-semibold text-transparent'>
+<nav class='sticky top-0 z-40 bg-navy-900 shadow-navy'>
+  <div class='mx-auto flex max-w-[90rem] items-center justify-between px-4 py-3 sm:px-6 lg:px-8'>
+    <a href='{{ portal_home_url|default:"#" }}'
+       class='font-display text-lg font-normal tracking-wide text-white hover:text-blue-200 transition-colors focus:outline-none focus:ring-2 focus:ring-health-400 rounded'>
       Agenda Clínica
     </a>
-    <div class='flex flex-wrap items-center gap-2 text-sm text-slate-300'>
-      <span class='text-slate-400'>Portal do paciente</span>
-      <span class='hidden text-slate-500 sm:inline'>&middot;</span>
-      <span class='text-slate-500'>{{ user.email }}</span>
+    <div class='flex items-center gap-3 text-sm'>
+      <span class='hidden text-blue-300 sm:inline'>Portal do paciente</span>
       <form method='post' action='{% url "accounts:logout" %}' class='inline'>
         {% csrf_token %}
         <button type='submit'
-                class='inline-flex items-center justify-center rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400'>
+                class='rounded-lg border border-navy-700 px-3 py-1.5 text-blue-200 transition hover:bg-navy-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-health-400'>
           Sair
         </button>
       </form>
@@ -27,30 +26,41 @@
 
 {% block content %}
 {% with current=request.resolver_match.url_name %}
-<div class='grid grid-cols-1 gap-6 lg:grid-cols-[16rem_1fr]'>
-  <aside class='rounded-2xl border border-slate-800 bg-slate-900/60 p-4 sm:p-6'>
-    <nav class='flex flex-col gap-1'>
-      <a href='{{ portal_home_url|default:"#"}}'
-         class='rounded-lg px-3 py-2 text-sm {% if current == "portal_home" %}bg-emerald-500/10 text-emerald-400{% else %}text-slate-300 hover:bg-slate-800{% endif %}'>
+<div class='grid grid-cols-1 gap-6 lg:grid-cols-[12rem_1fr]'>
+
+  <aside class='h-fit rounded-2xl bg-navy-900 p-4 dark:bg-navy-950 lg:sticky lg:top-20'>
+    <nav class='flex flex-col gap-1' aria-label='Navegação do portal'>
+      <a href='{{ portal_home_url|default:"#" }}'
+         class='flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-health-400
+                {% if current == "portal_home" %}bg-health-700/30 text-health-300{% else %}text-blue-200 hover:bg-navy-800 hover:text-white{% endif %}'>
+        <svg class='h-4 w-4 shrink-0' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'>
+          <path stroke-linecap='round' stroke-linejoin='round' d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'/>
+        </svg>
         Início
       </a>
-      <a href='{{ portal_appointments_url|default:"#"}}'
-         class='rounded-lg px-3 py-2 text-sm {% if current == "portal_appointments" %}bg-emerald-500/10 text-emerald-400{% else %}text-slate-300 hover:bg-slate-800{% endif %}'>
+      <a href='{{ portal_appointments_url|default:"#" }}'
+         class='flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-health-400
+                {% if current == "portal_appointments" %}bg-health-700/30 text-health-300{% else %}text-blue-200 hover:bg-navy-800 hover:text-white{% endif %}'>
+        <svg class='h-4 w-4 shrink-0' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'>
+          <path stroke-linecap='round' stroke-linejoin='round' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/>
+        </svg>
         Minhas consultas
       </a>
-      <a href='{{ portal_availability_url|default:"#"}}'
-         class='rounded-lg px-3 py-2 text-sm {% if current == "portal_availability" %}bg-emerald-500/10 text-emerald-400{% else %}text-slate-300 hover:bg-slate-800{% endif %}'>
+      <a href='{{ portal_availability_url|default:"#" }}'
+         class='flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-health-400
+                {% if current == "portal_availability" %}bg-health-700/30 text-health-300{% else %}text-blue-200 hover:bg-navy-800 hover:text-white{% endif %}'>
+        <svg class='h-4 w-4 shrink-0' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'>
+          <path stroke-linecap='round' stroke-linejoin='round' d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'/>
+        </svg>
         Disponibilidade
       </a>
-      <span class='rounded-lg px-3 py-2 text-sm text-slate-500'>
-        Dados do paciente
-      </span>
     </nav>
   </aside>
 
-  <main>
+  <main class='min-w-0'>
     {% block portal_content %}{% endblock %}
   </main>
+
 </div>
 {% endwith %}
 {% endblock %}

@@ -46,24 +46,6 @@ HELP_WORDS = (
     'comandos', 'o que posso', 'oq posso',
 )
 
-SPECIALTY_MAP_CACHE = None
-
-
-def _get_specialty_map():
-    global SPECIALTY_MAP_CACHE
-    if SPECIALTY_MAP_CACHE is None:
-        from professionals.models import Specialty
-
-        SPECIALTY_MAP_CACHE = {
-            str(s.pk): s.name for s in Specialty.objects.all()
-        }
-    return SPECIALTY_MAP_CACHE
-
-
-def _clear_specialty_cache():
-    global SPECIALTY_MAP_CACHE
-    SPECIALTY_MAP_CACHE = None
-
 
 def _normalize(text):
     return re.sub(r'\s+', ' ', text.lower().strip())
@@ -393,7 +375,6 @@ def _handle_booking_start(session, text):
     if not specialties.exists():
         return 'Nenhuma especialidade cadastrada no momento.'
 
-    _clear_specialty_cache()
     lines = [
         '*Agendamento — Escolha a especialidade:*\n',
     ]

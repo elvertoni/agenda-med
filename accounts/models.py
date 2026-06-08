@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
@@ -82,6 +84,10 @@ class PatientProfile(TimeStampedModel):
     cpf = models.CharField(max_length=14, unique=True)
     emergency_contact = models.CharField(max_length=150, blank=True)
     clinical_notes = models.TextField(blank=True)
+
+    def save(self, *args, **kwargs):
+        self.whatsapp_number = re.sub(r'\D', '', self.whatsapp_number or '')
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.full_name
