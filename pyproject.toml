@@ -17,10 +17,11 @@ dev = [
 [tool.ruff]
 line-length = 100
 target-version = 'py312'
-extend-exclude = ['.venv', 'migrations']
+extend-exclude = ['.venv', 'migrations', '.agents']
 
 [tool.ruff.lint]
 select = ['E', 'F', 'W', 'I', 'Q']
+ignore = ['E501']
 
 [tool.ruff.lint.flake8-quotes]
 inline-quotes = 'single'

@@ -16,7 +16,6 @@ tailwindcss
 tailwindcss.exe
 
 # Static build output
-static/css/output.css
 
 # Editor
 .vscode/
