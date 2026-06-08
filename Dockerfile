@@ -21,11 +21,15 @@ RUN pip install --no-cache-dir --upgrade pip \
 # Copy project files
 COPY . /app/
 
-# Build static files
-RUN python manage.py collectstatic --noinput
+# Create data directory for SQLite persistence
+RUN mkdir -p /app/data
+
+# Copy entrypoint
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Expose port
 EXPOSE 8000
 
-# Run gunicorn
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Run via entrypoint (handles migrate + collectstatic + gunicorn)
+ENTRYPOINT ["/app/entrypoint.sh"]

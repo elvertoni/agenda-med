@@ -100,4 +100,4 @@ Checklist de execução das sprints. Extraído de [`PRD.md` §13](PRD.md#13-list
 ## Sprint 10 (final) — Containerização
 - [x] 10.1 `Dockerfile` da aplicação
 - [x] 10.2 `docker-compose` para ambiente local
-- [ ] 10.3 Documentação de execução e variáveis de ambiente
+- [x] 10.3 Documentação de execução e variáveis de ambiente
