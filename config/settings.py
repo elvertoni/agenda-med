@@ -159,3 +159,7 @@ EVOLUTION_API_INSTANCE_NAME = os.environ.get('EVOLUTION_API_INSTANCE_NAME', 'cha
 OPENCODE_GO_API_KEY = os.environ.get('OPENCODE_GO_API_KEY', '')
 OPENCODE_GO_BASE_URL = os.environ.get('OPENCODE_GO_BASE_URL', 'https://opencode.ai/zen/go/v1')
 OPENCODE_GO_MODEL = os.environ.get('OPENCODE_GO_MODEL', 'deepseek-v4-flash')
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+

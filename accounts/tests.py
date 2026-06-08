@@ -4,7 +4,11 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from .forms import EmailLoginForm
+from .forms import (
+    EmailLoginForm,
+    StyledPasswordResetForm,
+    UserRegistrationForm,
+)
 from .models import PatientProfile
 
 User = get_user_model()
@@ -254,3 +258,77 @@ class LoginViewTests(TestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+
+class UserRegistrationTests(TestCase):
+    def test_registration_form_valid(self):
+        form = UserRegistrationForm(data={
+            'email': 'newuser@example.com',
+            'full_name': 'New User',
+            'password': 'password123',
+            'confirm_password': 'password123',
+        })
+        self.assertTrue(form.is_valid())
+
+    def test_registration_form_passwords_mismatch(self):
+        form = UserRegistrationForm(data={
+            'email': 'newuser@example.com',
+            'full_name': 'New User',
+            'password': 'password123',
+            'confirm_password': 'password456',
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn('confirm_password', form.errors)
+        self.assertEqual(form.errors['confirm_password'], ['As senhas não coincidem.'])
+
+    def test_registration_saves_as_staff(self):
+        form = UserRegistrationForm(data={
+            'email': 'newuser@example.com',
+            'full_name': 'New User',
+            'password': 'password123',
+            'confirm_password': 'password123',
+        })
+        self.assertTrue(form.is_valid())
+        user = form.save()
+        self.assertTrue(user.is_staff)
+        self.assertTrue(user.check_password('password123'))
+
+    def test_registration_view_get(self):
+        response = self.client.get(reverse('accounts:signup'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'accounts/signup.html')
+        self.assertIsInstance(response.context['form'], UserRegistrationForm)
+
+    def test_registration_view_post_success(self):
+        response = self.client.post(reverse('accounts:signup'), {
+            'email': 'postuser@example.com',
+            'full_name': 'Post User',
+            'password': 'password123',
+            'confirm_password': 'password123',
+        })
+        self.assertRedirects(response, reverse('accounts:login'))
+        self.assertTrue(User.objects.filter(email='postuser@example.com').exists())
+        user = User.objects.get(email='postuser@example.com')
+        self.assertTrue(user.is_staff)
+
+
+class PasswordResetTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = _make_user(email='reset@example.com', password='oldpassword123')
+
+    def test_password_reset_view_get(self):
+        response = self.client.get(reverse('accounts:password_reset'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'accounts/password_reset_form.html')
+        self.assertIsInstance(response.context['form'], StyledPasswordResetForm)
+
+    def test_password_reset_trigger_sends_email(self):
+        from django.core import mail
+        response = self.client.post(reverse('accounts:password_reset'), {
+            'email': 'reset@example.com',
+        })
+        self.assertRedirects(response, reverse('accounts:password_reset_done'))
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('reset@example.com', mail.outbox[0].to)
+

@@ -25,3 +25,8 @@ tailwindcss.exe
 Thumbs.db
 .DS_Store
 whatsapp_qrcode.png
+
+# Agents
+.agents/
+.pytest_cache/
+
