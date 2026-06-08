@@ -6,6 +6,8 @@
 
 /* ── Light mode (default) ─────────────────────────── */
 :root {
+  color-scheme: light;
+
   /* Backgrounds */
   --ds-bg-page:    #f8fafc;   /* slate-50  */
   --ds-bg-surface: #ffffff;   /* white     */
@@ -46,8 +48,46 @@
   --ds-transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ── Form inputs — força esquema de cores correto ─── */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea {
+  background-color: #ffffff;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  width: 100%;
+  transition: border-color var(--ds-transition), box-shadow var(--ds-transition);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.dark select,
+.dark textarea {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  border-color: #334155;
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+}
+
 /* ── Dark mode ────────────────────────────────────── */
 .dark {
+  color-scheme: dark;
   --ds-bg-page:    #020617;   /* slate-950 */
   --ds-bg-surface: #0f172a;   /* slate-900 */
   --ds-bg-raised:  #1e293b;   /* slate-800 */
