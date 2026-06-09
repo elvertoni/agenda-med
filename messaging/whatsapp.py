@@ -81,6 +81,11 @@ class WhatsAppGateway:
         if isinstance(payload, dict) and 'event' in payload:
             try:
                 data = payload.get('data', {})
+                
+                # Evolution API sometimes nests the payload inside data.message
+                if 'key' not in data and 'message' in data and isinstance(data['message'], dict) and 'key' in data['message']:
+                    data = data['message']
+                
                 key = data.get('key', {})
                 # If message is fromMe, ignore it to avoid infinite loop
                 if key.get('fromMe') is True:
