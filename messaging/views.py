@@ -26,7 +26,8 @@ class WhatsAppWebhookView(View):
     '''Webhook endpoint for incoming WhatsApp messages.'''
 
     def get(self, request):
-        verify_token = getattr(request, 'whatsapp_verify_token', '')
+        from django.conf import settings
+        verify_token = getattr(settings, 'WHATSAPP_VERIFY_TOKEN', '')
         mode = request.GET.get('hub.mode', '')
         token = request.GET.get('hub.verify_token', '')
         challenge = request.GET.get('hub.challenge', '')
@@ -36,6 +37,13 @@ class WhatsAppWebhookView(View):
         return HttpResponse(status=403)
 
     def post(self, request):
+        from django.conf import settings
+        webhook_token = getattr(settings, 'EVOLUTION_WEBHOOK_TOKEN', '')
+        if webhook_token:
+            token = request.headers.get('apikey') or request.headers.get('Authorization', '')
+            if token != webhook_token:
+                return JsonResponse({'error': 'unauthorized'}, status=401)
+
         try:
             payload = json.loads(request.body)
         except json.JSONDecodeError:

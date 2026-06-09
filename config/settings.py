@@ -154,6 +154,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EVOLUTION_API_BASE_URL = os.environ.get('EVOLUTION_API_BASE_URL', 'http://localhost:8080')
 EVOLUTION_API_API_KEY = os.environ.get('EVOLUTION_API_API_KEY', 'change-me-key')
 EVOLUTION_API_INSTANCE_NAME = os.environ.get('EVOLUTION_API_INSTANCE_NAME', 'change-me-instance')
+EVOLUTION_WEBHOOK_TOKEN = os.environ.get('EVOLUTION_WEBHOOK_TOKEN', '')
+WHATSAPP_VERIFY_TOKEN = os.environ.get('WHATSAPP_VERIFY_TOKEN', '')
 
 # OpenCode Go / DeepSeek Settings
 OPENCODE_GO_API_KEY = os.environ.get('OPENCODE_GO_API_KEY', '')

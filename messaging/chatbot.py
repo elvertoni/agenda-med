@@ -96,11 +96,18 @@ def parse_intent(text, session_state):
 
 
 def _get_or_create_session(phone_number):
+    from datetime import timedelta
     normalized = normalize_whatsapp_number(phone_number)
-    session, _ = ChatSession.objects.get_or_create(
+    session, created = ChatSession.objects.get_or_create(
         phone_number=normalized,
         defaults={'state': ChatSession.State.IDLE, 'context': {}},
     )
+    if not created and session.state != ChatSession.State.IDLE:
+        SESSION_TTL_MINUTES = 15
+        if timezone.now() - session.updated_at > timedelta(minutes=SESSION_TTL_MINUTES):
+            session.state = ChatSession.State.IDLE
+            session.context = {}
+            session.save(update_fields=['state', 'context', 'updated_at'])
     return session
 
 
@@ -122,7 +129,7 @@ def call_deepseek_v4_flash(message_text, system_prompt):
     headers = {
         'Authorization': f'Bearer {api_key}',
         'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'User-Agent': 'agenda-clinica/1.0',
     }
 
     payload = {
@@ -192,6 +199,34 @@ def _get_ai_response(message_text):
 
 def handle_incoming(phone_number, message_text):
     session = _get_or_create_session(phone_number)
+
+    # Verifica resposta de confirmação de presença
+    patient = find_patient_by_whatsapp(phone_number)
+    if patient:
+        from .models import PresenceConfirmation
+        from .services import record_presence_response
+        confirmation = PresenceConfirmation.objects.filter(
+            status=PresenceConfirmation.Status.SENT,
+            channel=PresenceConfirmation.Channel.WHATSAPP,
+            appointment__patient=patient
+        ).order_by('-sent_at').first()
+
+        if confirmation:
+            norm_msg = _normalize(message_text)
+            is_yes = any(word in norm_msg for word in ('sim', 'confirmo', 'confirmar', 'vou', 'quero'))
+            is_no = any(word in norm_msg for word in ('não', 'nao', 'cancelar', 'desmarcar', 'desisto', 'não vou', 'nao vou'))
+
+            if is_yes and not is_no:
+                record_presence_response(confirmation, PresenceConfirmation.Response.CONFIRMED)
+                response = 'Obrigado! Sua presença foi confirmada com sucesso.'
+                _send_reply(phone_number, response)
+                return response
+            elif is_no:
+                record_presence_response(confirmation, PresenceConfirmation.Response.NOT_CONFIRMED)
+                response = 'Entendido. Sua consulta foi desmarcada. Se precisar reagendar, digite *agendar*.'
+                _send_reply(phone_number, response)
+                return response
+
     intent = parse_intent(message_text, session.state)
     logger.info(
         'Chatbot incoming: phone=%s state=%s intent=%s',

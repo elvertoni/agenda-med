@@ -858,6 +858,7 @@ class WebhookViewTests(TestCase):
             self.assertEqual(response.status_code, 200)
             mock_handle.assert_called_once_with('5511999990000', 'agendar')
 
+    @override_settings(WHATSAPP_VERIFY_TOKEN='test-token')
     def test_get_verification_subscribe(self):
         from django.test import RequestFactory
 
@@ -872,12 +873,12 @@ class WebhookViewTests(TestCase):
                 'hub.challenge': 'challenge-code',
             },
         )
-        request.whatsapp_verify_token = 'test-token'
         view = WhatsAppWebhookView.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, b'challenge-code')
 
+    @override_settings(WHATSAPP_VERIFY_TOKEN='test-token')
     def test_get_verification_wrong_token(self):
         from django.test import RequestFactory
 
@@ -892,18 +893,17 @@ class WebhookViewTests(TestCase):
                 'hub.challenge': 'challenge-code',
             },
         )
-        request.whatsapp_verify_token = 'test-token'
         view = WhatsAppWebhookView.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 403)
 
+    @override_settings(WHATSAPP_VERIFY_TOKEN='test-token')
     def test_get_verification_missing_params(self):
         from django.test import RequestFactory
 
         from .views import WhatsAppWebhookView
 
         request = RequestFactory().get('/messaging/webhook/whatsapp/')
-        request.whatsapp_verify_token = 'test-token'
         view = WhatsAppWebhookView.as_view()
         response = view(request)
         self.assertEqual(response.status_code, 403)
