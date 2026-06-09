@@ -1,0 +1,51 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "Agenda Clínica" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e5]:
+        - link "Início" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - link "Profissionais" [ref=e7] [cursor=pointer]:
+          - /url: /profissionais/
+        - link "Preços" [ref=e8] [cursor=pointer]:
+          - /url: /precos/
+        - link "Acesso do paciente" [ref=e9] [cursor=pointer]:
+          - /url: /messaging/otp/
+        - link "Login da equipe" [ref=e10] [cursor=pointer]:
+          - /url: /accounts/login/
+        - button "Alternar tema claro/escuro" [ref=e11] [cursor=pointer]:
+          - img [ref=e12]
+  - main [ref=e14]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - img [ref=e19]
+        - generic [ref=e21]:
+          - heading "Criar conta da equipe" [level=1] [ref=e22]
+          - paragraph [ref=e23]: Acesso ao painel administrativo
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]: Full name
+          - textbox "Full name" [ref=e27]:
+            - /placeholder: Nome Completo
+        - generic [ref=e28]:
+          - generic [ref=e29]: Email *
+          - textbox "Email *" [ref=e30]:
+            - /placeholder: voce@exemplo.com
+        - generic [ref=e31]:
+          - generic [ref=e32]: Senha *
+          - textbox "Senha *" [ref=e33]:
+            - /placeholder: ••••••••
+        - generic [ref=e34]:
+          - generic [ref=e35]: Confirmar Senha *
+          - textbox "Confirmar Senha *" [ref=e36]:
+            - /placeholder: ••••••••
+        - button "Criar conta" [ref=e37] [cursor=pointer]
+      - paragraph [ref=e39]:
+        - text: Já tem uma conta?
+        - link "Entrar" [ref=e40] [cursor=pointer]:
+          - /url: /accounts/login/
+  - contentinfo [ref=e41]:
+    - generic [ref=e42]:
+      - generic [ref=e43]: © Agenda Clínica
+      - generic [ref=e44]: Atendimento principal pelo WhatsApp

@@ -152,31 +152,39 @@ def call_deepseek_v4_flash(message_text, system_prompt):
 
 
 def _get_ai_response(message_text):
-    # Fetch price items
-    prices = PriceItem.objects.filter(is_active=True).select_related('specialty')
-    prices_list = []
-    current_spec = None
-    for item in prices:
-        if item.specialty.name != current_spec:
-            current_spec = item.specialty.name
-            prices_list.append(f'\n🏥 {current_spec}:')
-        desc = f' — {item.description}' if item.description else ''
-        prices_list.append(f'  • {item.name}{desc}: R$ {item.price:.2f}')
-    prices_text = '\n'.join(prices_list) if prices_list else 'Nenhum preço cadastrado no momento.'
+    from django.core.cache import cache
 
-    # Fetch protocols
-    service_protocols = ServiceProtocol.objects.filter(is_active=True)
-    exam_protocols = ExamProtocol.objects.filter(is_active=True).select_related('specialty')
-    protocols_list = []
-    if exam_protocols.exists():
-        protocols_list.append('Protocolos de exames:')
-        for ep in exam_protocols:
-            protocols_list.append(f'🔬 {ep.exam_name} ({ep.specialty.name}): {ep.preparation_instructions}')
-    if service_protocols.exists():
-        protocols_list.append('\nProtocolos de atendimento:')
-        for sp in service_protocols:
-            protocols_list.append(f'📋 {sp.title}: {sp.content}')
-    protocols_text = '\n'.join(protocols_list) if protocols_list else 'Nenhum protocolo cadastrado no momento.'
+    # Fetch price items with cache
+    prices_text = cache.get('chatbot_prices_text')
+    if prices_text is None:
+        prices = PriceItem.objects.filter(is_active=True).select_related('specialty')
+        prices_list = []
+        current_spec = None
+        for item in prices:
+            if item.specialty.name != current_spec:
+                current_spec = item.specialty.name
+                prices_list.append(f'\n🏥 *{current_spec}*:')
+            desc = f' — {item.description}' if item.description else ''
+            prices_list.append(f'  • {item.name}{desc}: R$ {item.price:.2f}')
+        prices_text = '\n'.join(prices_list) if prices_list else 'Nenhum preço cadastrado no momento.'
+        cache.set('chatbot_prices_text', prices_text, 900)  # 15 minutes
+
+    # Fetch protocols with cache
+    protocols_text = cache.get('chatbot_protocols_text')
+    if protocols_text is None:
+        service_protocols = ServiceProtocol.objects.filter(is_active=True)
+        exam_protocols = ExamProtocol.objects.filter(is_active=True).select_related('specialty')
+        protocols_list = []
+        if exam_protocols.exists():
+            protocols_list.append('*Protocolos de exames:*')
+            for ep in exam_protocols:
+                protocols_list.append(f'🔬 *{ep.exam_name}* ({ep.specialty.name}): {ep.preparation_instructions}')
+        if service_protocols.exists():
+            protocols_list.append('\n*Protocolos de atendimento:*')
+            for sp in service_protocols:
+                protocols_list.append(f'📋 *{sp.title}*: {sp.content}')
+        protocols_text = '\n'.join(protocols_list) if protocols_list else 'Nenhum protocolo cadastrado no momento.'
+        cache.set('chatbot_protocols_text', protocols_text, 900)  # 15 minutes
 
     system_prompt = (
         'Você é o assistente virtual inteligente de atendimento da Clínica Médica.\n'
@@ -190,7 +198,8 @@ def _get_ai_response(message_text):
         '- Para agendar uma consulta ou ver os horários disponíveis, o paciente deve iniciar o fluxo escrevendo a palavra "agendar" ou "marcar consulta".\n'
         '- Se o paciente demonstrar interesse em agendar, oriente-o de forma curta e direta a digitar "agendar".\n\n'
         '[DIRETRIZES DE RESPOSTA]\n'
-        '- Responda sempre em português brasileiro de forma educada, prestativa, simpática e muito objetiva (evite textos excessivamente longos).\n'
+        '- Responda sempre em português brasileiro de forma educada, prestativa, simpática e objetiva (evite textos excessivamente longos).\n'
+        '- IMPORTANTE: Formate sua resposta para o WhatsApp. Use *asteriscos* para negrito em palavras importantes, use emojis para deixar a mensagem amigável, e use quebras de linha para separar os parágrafos.\n'
         '- Nunca invente informações de preços ou protocolos que não estejam listados acima. Se não souber ou não encontrar a informação nas listas acima, responda educadamente que não possui essa informação e oriente o paciente a solicitar falar com a recepção humana.'
     )
 
@@ -213,7 +222,7 @@ def handle_incoming(phone_number, message_text):
 
         if confirmation:
             norm_msg = _normalize(message_text)
-            is_yes = any(word in norm_msg for word in ('sim', 'confirmo', 'confirmar', 'vou', 'quero'))
+            is_yes = any(word in norm_msg for word in ('sim', 'confirmo', 'confirmar', 'vou', 'quero', 'estarei', 'ok', 'certo', 'beleza', 'joia', 'positivo'))
             is_no = any(word in norm_msg for word in ('não', 'nao', 'cancelar', 'desmarcar', 'desisto', 'não vou', 'nao vou'))
 
             if is_yes and not is_no:

@@ -59,7 +59,7 @@ class WhatsAppGateway:
         data = json.dumps(payload).encode('utf-8')
         req = urllib.request.Request(url, data=data, headers=headers, method='POST')
         try:
-            with urllib.request.urlopen(req, timeout=10) as response:
+            with urllib.request.urlopen(req, timeout=15) as response:
                 response.read()
                 logger.info('Message successfully sent to %s via Evolution API', clean_number)
                 return True

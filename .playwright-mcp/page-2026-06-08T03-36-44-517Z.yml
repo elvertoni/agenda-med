@@ -1,0 +1,50 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "Agenda Clínica" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e5]:
+        - link "Início" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - link "Profissionais" [ref=e7] [cursor=pointer]:
+          - /url: /profissionais/
+        - link "Preços" [ref=e8] [cursor=pointer]:
+          - /url: /precos/
+        - link "Acesso do paciente" [ref=e9] [cursor=pointer]:
+          - /url: /messaging/otp/
+        - link "Login da equipe" [ref=e10] [cursor=pointer]:
+          - /url: /accounts/login/
+        - button "Alternar tema claro/escuro" [ref=e11] [cursor=pointer]:
+          - img [ref=e12]
+  - main [ref=e14]:
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - img [ref=e19]
+        - generic [ref=e21]:
+          - heading "Acesso da equipe" [level=1] [ref=e22]
+          - paragraph [ref=e23]: Entre com e-mail e senha
+      - generic [ref=e24]:
+        - paragraph [ref=e25]: É paciente?
+        - paragraph [ref=e26]: Acesse o portal com seu número de WhatsApp — sem senha.
+        - link "Acesso do paciente (WhatsApp)" [ref=e27] [cursor=pointer]:
+          - /url: /messaging/otp/
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: E-mail *
+          - textbox "E-mail *" [active] [ref=e31]:
+            - /placeholder: voce@exemplo.com
+        - generic [ref=e32]:
+          - generic [ref=e33]: Senha *
+          - textbox "Senha *" [ref=e34]
+        - button "Entrar" [ref=e35] [cursor=pointer]
+      - generic [ref=e36]:
+        - link "Esqueceu a senha?" [ref=e37] [cursor=pointer]:
+          - /url: /accounts/password-reset/
+        - paragraph [ref=e38]:
+          - text: Não tem uma conta?
+          - link "Cadastre-se" [ref=e39] [cursor=pointer]:
+            - /url: /accounts/signup/
+  - contentinfo [ref=e40]:
+    - generic [ref=e41]:
+      - generic [ref=e42]: © Agenda Clínica
+      - generic [ref=e43]: Atendimento principal pelo WhatsApp

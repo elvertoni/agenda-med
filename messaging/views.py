@@ -53,13 +53,18 @@ class WhatsAppWebhookView(View):
         phone_number, message_text = gateway.parse_incoming(payload)
 
         if phone_number and message_text:
-            try:
-                handle_incoming(phone_number, message_text)
-            except Exception:
-                logger.exception(
-                    'Error processing chatbot message from %s',
-                    phone_number,
-                )
+            def run_chatbot():
+                try:
+                    handle_incoming(phone_number, message_text)
+                except Exception:
+                    logger.exception(
+                        'Error processing chatbot message from %s',
+                        phone_number,
+                    )
+            
+            import threading
+            thread = threading.Thread(target=run_chatbot)
+            thread.start()
 
         return JsonResponse({'status': 'ok'}, status=200)
 

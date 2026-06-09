@@ -1,0 +1,73 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "Agenda Clínica" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e5]:
+        - link "Início" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - link "Profissionais" [ref=e7] [cursor=pointer]:
+          - /url: /profissionais/
+        - link "Preços" [ref=e8] [cursor=pointer]:
+          - /url: /precos/
+        - link "Acesso do paciente" [ref=e9] [cursor=pointer]:
+          - /url: /messaging/otp/
+        - link "Login da equipe" [ref=e10] [cursor=pointer]:
+          - /url: /accounts/login/
+        - button "Alternar tema claro/escuro" [ref=e11] [cursor=pointer]:
+          - img [ref=e12]
+  - main [ref=e14]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - paragraph [ref=e17]: Agenda Clínica
+        - heading "Agendamento e atendimento integrado pelo WhatsApp" [level=1] [ref=e18]
+        - paragraph [ref=e19]: Encontre profissionais, consulte horários, preços e protocolos. O canal primário é o WhatsApp — rápido, familiar e sempre disponível.
+        - generic [ref=e20]:
+          - link "Acesso do paciente" [ref=e21] [cursor=pointer]:
+            - /url: /messaging/otp/
+          - link "Login da equipe" [ref=e22] [cursor=pointer]:
+            - /url: /accounts/login/
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - paragraph [ref=e25]: "0"
+          - paragraph [ref=e26]: profissionais ativos
+        - generic [ref=e27]:
+          - paragraph [ref=e28]: "0"
+          - paragraph [ref=e29]: preços publicados
+        - generic [ref=e30]:
+          - paragraph [ref=e31]: "0"
+          - paragraph [ref=e32]: protocolos disponíveis
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - paragraph [ref=e36]: Equipe clínica
+          - heading "Profissionais em atendimento" [level=2] [ref=e37]
+          - paragraph [ref=e38]: Conheça a equipe ativa e suas especialidades.
+        - link "Ver equipe completa" [ref=e39] [cursor=pointer]:
+          - /url: /profissionais/
+      - generic [ref=e41]: A equipe ativa aparecerá aqui após o cadastro.
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - paragraph [ref=e44]: Transparência
+        - heading "Informações públicas" [level=2] [ref=e45]
+        - paragraph [ref=e46]: Preços, orientações de atendimento e preparo para exames publicados pela clínica.
+      - generic [ref=e47]:
+        - link "Preços e procedimentos Valores serão publicados pela equipe." [ref=e48] [cursor=pointer]:
+          - /url: /precos/
+          - img [ref=e50]
+          - heading "Preços e procedimentos" [level=3] [ref=e52]
+          - paragraph [ref=e53]: Valores serão publicados pela equipe.
+        - link "Protocolos de atendimento Orientações serão exibidas quando publicadas." [ref=e54] [cursor=pointer]:
+          - /url: /protocolos-de-atendimento/
+          - img [ref=e56]
+          - heading "Protocolos de atendimento" [level=3] [ref=e58]
+          - paragraph [ref=e59]: Orientações serão exibidas quando publicadas.
+        - link "Protocolos de exames Instruções de preparo serão exibidas quando publicadas." [ref=e60] [cursor=pointer]:
+          - /url: /protocolos-de-exames/
+          - img [ref=e62]
+          - heading "Protocolos de exames" [level=3] [ref=e64]
+          - paragraph [ref=e65]: Instruções de preparo serão exibidas quando publicadas.
+  - contentinfo [ref=e66]:
+    - generic [ref=e67]:
+      - generic [ref=e68]: © Agenda Clínica
+      - generic [ref=e69]: Atendimento principal pelo WhatsApp
